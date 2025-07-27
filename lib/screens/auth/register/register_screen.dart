@@ -13,10 +13,6 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  String name = "";
-  String email = "";
-  String password = "";
-
   late RegisterProvider _registerProvider;
 
   @override
@@ -27,205 +23,211 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Future<void> handleRegister() async {
     await _registerProvider.register(
-      name: name,
-      email: email,
-      password: password,
+      name: _registerProvider.name,
+      email: _registerProvider.email,
+      password: _registerProvider.password,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              IconButton(
-                onPressed: () {
-                  context.go("/onboarding");
-                },
-                icon: Icon(Icons.chevron_left, size: 24),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(horizontal: 10),
-                child: Text(
-                  "Hello! Register to get started",
-                  overflow: TextOverflow.ellipsis,
-                  style: AppTextStyles.titleLarge.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Form(
-                key: Key("login_form"),
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Container(
-                    margin: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        SizedBox(height: 10),
-                        TextField(
-                          style: AppTextStyles.bodyLargeMedium,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              "Enter your name",
-                              style: AppTextStyles.bodyLargeMedium,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 1.5,
-                              ), // border saat focus
-                            ),
-                          ),
-                          onChanged: (val) {
-                            setState(() {
-                              email = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 10),
-                        TextField(
-                          style: AppTextStyles.bodyLargeMedium,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              "Enter your email",
-                              style: AppTextStyles.bodyLargeMedium,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 1.5,
-                              ), // border saat focus
-                            ),
-                          ),
-                          onChanged: (val) {
-                            setState(() {
-                              email = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 15),
-                        TextField(
-                          obscureText: true,
-                          style: AppTextStyles.bodyLargeMedium,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              "Enter your password",
-                              style: AppTextStyles.bodyLargeMedium,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            suffixIcon: IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.visibility_off_outlined),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 1.5,
-                              ), // border saat focus
-                            ),
-                          ),
-                          onChanged: (val) {
-                            setState(() {
-                              email = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 15),
-                        TextField(
-                          obscureText: true,
-                          style: AppTextStyles.bodyLargeMedium,
-                          decoration: InputDecoration(
-                            hint: Text(
-                              "Confirm password",
-                              style: AppTextStyles.bodyLargeMedium,
-                            ),
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            suffixIcon: IconButton(
-                              onPressed: () {},
-                              icon: Icon(Icons.visibility_off_outlined),
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: Colors.grey),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(
-                                color: Theme.of(context).colorScheme.primary,
-                                width: 1.5,
-                              ), // border saat focus
-                            ),
-                          ),
-                          onChanged: (val) {
-                            setState(() {
-                              email = val;
-                            });
-                          },
-                        ),
-                        SizedBox(height: 5),
-                        Container(
-                          margin: EdgeInsets.only(top: 10),
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black87,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                            ),
-                            child: Text(
-                              'Register',
-                              style: AppTextStyles.bodyLargeMedium.copyWith(
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Text(
-                            "Or register with",
-                            textAlign: TextAlign.center,
-                            style: AppTextStyles.bodyLargeRegular,
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 20),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: _buildSocialButtons(),
-                          ),
-                        ),
-                      ],
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.chevron_left),
+          onPressed: () {
+            context.go("/onboarding");
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    "Hello! Register to get started",
+                    style: AppTextStyles.titleLarge.copyWith(
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              ),
-            ],
+                Form(
+                  key: Key("login_form"),
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Container(
+                      margin: EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          SizedBox(height: 10),
+                          TextField(
+                            style: AppTextStyles.bodyLargeMedium,
+                            decoration: InputDecoration(
+                              hint: Text(
+                                "Enter your name",
+                                style: AppTextStyles.bodyLargeMedium,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1.5,
+                                ), // border saat focus
+                              ),
+                            ),
+                            onChanged: (val) {
+                              _registerProvider.name = val;
+                            },
+                          ),
+                          SizedBox(height: 10),
+                          TextField(
+                            style: AppTextStyles.bodyLargeMedium,
+                            decoration: InputDecoration(
+                              hint: Text(
+                                "Enter your email",
+                                style: AppTextStyles.bodyLargeMedium,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1.5,
+                                ), // border saat focus
+                              ),
+                            ),
+                            onChanged: (val) {
+                              _registerProvider.email = val;
+                            },
+                          ),
+                          SizedBox(height: 15),
+                          TextField(
+                            obscureText: context
+                                .watch<RegisterProvider>()
+                                .isObscureText,
+                            style: AppTextStyles.bodyLargeMedium,
+                            decoration: InputDecoration(
+                              hint: Text(
+                                "Enter your password",
+                                style: AppTextStyles.bodyLargeMedium,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              suffixIcon: IconButton(
+                                onPressed: () {
+                                  _registerProvider.isObscureText =
+                                      !_registerProvider.isObscureText;
+                                },
+                                icon: Icon(Icons.visibility_off_outlined),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1.5,
+                                ), // border saat focus
+                              ),
+                            ),
+                            onChanged: (val) {
+                              _registerProvider.password = val;
+                            },
+                          ),
+                          SizedBox(height: 15),
+                          TextField(
+                            obscureText: true,
+                            style: AppTextStyles.bodyLargeMedium,
+                            decoration: InputDecoration(
+                              hint: Text(
+                                "Confirm password",
+                                style: AppTextStyles.bodyLargeMedium,
+                              ),
+                              floatingLabelBehavior:
+                                  FloatingLabelBehavior.never,
+                              suffixIcon: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.visibility_off_outlined),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(color: Colors.grey),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  width: 1.5,
+                                ), // border saat focus
+                              ),
+                            ),
+                            onChanged: (val) {
+                              _registerProvider.email = val;
+                            },
+                          ),
+                          SizedBox(height: 5),
+                          Container(
+                            margin: EdgeInsets.only(top: 10),
+                            width: double.infinity,
+                            child: ElevatedButton(
+                              onPressed: () {},
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black87,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 20,
+                                ),
+                              ),
+                              child: Text(
+                                'Register',
+                                style: AppTextStyles.bodyLargeMedium.copyWith(
+                                  color: Theme.of(context).colorScheme.surface,
+                                ),
+                              ),
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Text(
+                              "Or register with",
+                              textAlign: TextAlign.center,
+                              style: AppTextStyles.bodyLargeRegular,
+                            ),
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: _buildSocialButtons(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -19,6 +19,14 @@ class RegisterProvider extends ChangeNotifier {
 
   bool get error => _error;
 
+  String name = "";
+
+  String email = "";
+
+  String password = "";
+
+  bool isObscureText = true;
+
   Future<void> register({
     required String name,
     required String email,

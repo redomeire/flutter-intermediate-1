@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/onboarding/widgets/fab_button.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_expandable_fab/flutter_expandable_fab.dart';
@@ -9,6 +10,7 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
+import '../../services/http/static/add_story_result_state.dart';
 import '../../styles/typography/app_typography.dart';
 
 class AddStoryScreen extends StatefulWidget {
@@ -19,10 +21,6 @@ class AddStoryScreen extends StatefulWidget {
 }
 
 class _AddStoryScreenState extends State<AddStoryScreen> {
-  String description = "";
-  bool isObscureText = true;
-  XFile? imageFile;
-  String? imagePath;
   late AddStoryProvider _addStoryProvider;
   late SharedPreferencesProvider _sharedPreferencesProvider;
 
@@ -33,7 +31,8 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     );
 
     if (pickedFile != null) {
-      imageFile = pickedFile;
+      _addStoryProvider.setImageFile(pickedFile);
+      _addStoryProvider.setImagePath(pickedFile.path);
     }
   }
 
@@ -50,30 +49,54 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     );
 
     if (pickedFile != null) {
-      imageFile = pickedFile;
+      _addStoryProvider.setImageFile(pickedFile);
+      _addStoryProvider.setImagePath(pickedFile.path);
     }
   }
 
   _onUpload() async {
-    if (imagePath == null || imageFile == null) return;
-    final fileName = imageFile?.name;
-    final bytes = await imageFile?.readAsBytes();
+    if (_addStoryProvider.imagePath == null ||
+        _addStoryProvider.imageFile == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Image must not be empty")));
+      return;
+    }
+    final fileName = _addStoryProvider.imageFile?.name;
+    final bytes = await _addStoryProvider.imageFile?.readAsBytes();
 
     await _addStoryProvider.addStory(
-      description: description,
+      description: _addStoryProvider.description,
       bytes: bytes as List<int>,
       fileName: fileName ?? "",
       token: _sharedPreferencesProvider.user?.token,
     );
+
+    if (!_addStoryProvider.error) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(_addStoryProvider.message)));
+    }
   }
 
   Widget _showImage() {
     return kIsWeb
-        ? Image.network(imageFile?.path.toString() ?? "", fit: BoxFit.contain)
+        ? Image.network(
+            context.watch<AddStoryProvider>().imageFile?.path.toString() ?? "",
+            fit: BoxFit.contain,
+          )
         : Image.file(
-            File(imageFile?.path.toString() ?? ""),
+            File(
+              context.watch<AddStoryProvider>().imageFile?.path.toString() ??
+                  "",
+            ),
             fit: BoxFit.contain,
           );
+  }
+
+  _onRemoveImage() async {
+    _addStoryProvider.setImageFile(null);
+    _addStoryProvider.setImagePath("");
   }
 
   @override
@@ -87,42 +110,18 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: ExpandableFab(
-        type: ExpandableFabType.up,
-        openButtonBuilder: RotateFloatingActionButtonBuilder(
-          child: const Icon(Icons.perm_media_outlined),
-          fabSize: ExpandableFabSize.regular,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          foregroundColor: Theme.of(context).colorScheme.surface,
-          shape: const CircleBorder(),
-        ),
-        closeButtonBuilder: DefaultFloatingActionButtonBuilder(
-          child: const Icon(Icons.close),
-          fabSize: ExpandableFabSize.small,
-          backgroundColor: Theme.of(context).colorScheme.secondary,
-          foregroundColor: Theme.of(context).colorScheme.surface,
-          shape: const CircleBorder(),
-        ),
-        children: [
-          FloatingActionButton.small(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.surface,
-            heroTag: null,
-            onPressed: _onGalleryView,
-            child: const Icon(Icons.photo_outlined),
-          ),
-          FloatingActionButton.small(
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            foregroundColor: Theme.of(context).colorScheme.surface,
-            heroTag: null,
-            onPressed: _onCameraView,
-            child: const Icon(Icons.camera_alt_outlined),
-          ),
-        ],
+      floatingActionButton: FabButton(
+        onGalleryView: _onGalleryView,
+        onCameraView: _onCameraView,
       ),
       appBar: AppBar(
         title: Text("Add Item", style: AppTextStyles.labelLarge),
-        leading: IconButton(onPressed: () {}, icon: Icon(Icons.chevron_left)),
+        leading: IconButton(
+          onPressed: () {
+            context.go("/");
+          },
+          icon: Icon(Icons.chevron_left),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -131,7 +130,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Form(
-                key: Key("login_form"),
+                key: Key("story_form"),
                 child: Padding(
                   padding: const EdgeInsets.all(10),
                   child: Container(
@@ -139,8 +138,40 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                     child: Column(
                       children: [
                         SizedBox(height: 10),
-                        imageFile != null
-                            ? SizedBox(height: 200, child: _showImage())
+                        context.watch<AddStoryProvider>().imageFile != null
+                            ? SizedBox(
+                                width: double.infinity,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Center(child: _showImage()),
+                                    SizedBox(height: 10),
+                                    ElevatedButton(
+                                      onPressed: _onRemoveImage,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black87,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                          'Remove',
+                                          style: AppTextStyles.bodyLargeMedium
+                                              .copyWith(
+                                                color: Theme.of(
+                                                  context,
+                                                ).colorScheme.surface,
+                                              ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
                             : SizedBox(),
                         SizedBox(height: 20),
                         TextField(
@@ -166,30 +197,142 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
                             ),
                           ),
                           onChanged: (val) {
-                            setState(() {
-                              description = val;
-                            });
+                            _addStoryProvider.description = val;
                           },
                         ),
                         SizedBox(height: 15),
                         SizedBox(height: 5),
                         SizedBox(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: _onUpload,
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black87,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              padding: const EdgeInsets.symmetric(vertical: 20),
-                            ),
-                            child: Text(
-                              'Login',
-                              style: AppTextStyles.bodyLargeMedium.copyWith(
-                                color: Theme.of(context).colorScheme.surface,
-                              ),
-                            ),
+                          child: Consumer<AddStoryProvider>(
+                            builder: (context, state, child) {
+                              return switch (state.responseState) {
+                                AddStoryResultLoading() => ElevatedButton(
+                                  onPressed: null,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black87,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
+                                    disabledBackgroundColor: Theme.of(
+                                      context,
+                                    ).colorScheme.inverseSurface,
+                                  ),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    spacing: 10,
+                                    children: [
+                                      SizedBox(
+                                        width: 15.0,
+                                        height: 15.0,
+                                        child: CircularProgressIndicator(
+                                          valueColor:
+                                              AlwaysStoppedAnimation<Color>(
+                                                Colors.white,
+                                              ),
+                                          strokeWidth: 2.0,
+                                        ),
+                                      ),
+                                      Text(
+                                        'Submit',
+                                        style: AppTextStyles.bodyLargeMedium
+                                            .copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.surface,
+                                            ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                AddStoryResultSuccess() => ElevatedButton(
+                                  onPressed: _onUpload,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black87,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Submit',
+                                    style: AppTextStyles.bodyLargeMedium
+                                        .copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surface,
+                                        ),
+                                  ),
+                                ),
+                                AddStoryResultFailed() => Column(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.stretch,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: _onUpload,
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.black87,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            8,
+                                          ),
+                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                          vertical: 20,
+                                        ),
+                                      ),
+                                      child: Text(
+                                        'Submit',
+                                        style: AppTextStyles.bodyLargeMedium
+                                            .copyWith(
+                                              color: Theme.of(
+                                                context,
+                                              ).colorScheme.surface,
+                                            ),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10),
+                                    Text(
+                                      state.message,
+                                      style: AppTextStyles.bodyLargeMedium
+                                          .copyWith(
+                                            color: Theme.of(
+                                              context,
+                                            ).colorScheme.error,
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                                _ => ElevatedButton(
+                                  onPressed: _onUpload,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black87,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 20,
+                                    ),
+                                  ),
+                                  child: Text(
+                                    'Submit',
+                                    style: AppTextStyles.bodyLargeMedium
+                                        .copyWith(
+                                          color: Theme.of(
+                                            context,
+                                          ).colorScheme.surface,
+                                        ),
+                                  ),
+                                ),
+                              };
+                            },
                           ),
                         ),
                       ],
@@ -199,43 +342,6 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
               ),
             ],
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.transparent,
-        elevation: 0,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20),
-              child: Center(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Don't have an account? ",
-                      style: AppTextStyles.labelMedium.copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        context.go("/register");
-                      },
-                      child: Text(
-                        "Register Now",
-                        style: AppTextStyles.labelMedium.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );

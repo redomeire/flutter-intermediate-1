@@ -34,7 +34,6 @@ class OnboardingScreen extends StatelessWidget {
                       height: 350,
                       width: double.infinity,
                       fit: BoxFit.cover,
-
                     ),
                   ),
                   const SizedBox(height: 10),

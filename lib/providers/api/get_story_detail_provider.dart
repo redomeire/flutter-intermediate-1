@@ -1,6 +1,6 @@
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_story_detail_result_state.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class GetStoryDetailProvider extends ChangeNotifier {
   final ApiService apiService;

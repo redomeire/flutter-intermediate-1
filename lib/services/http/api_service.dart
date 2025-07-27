@@ -64,7 +64,8 @@ class ApiService {
     required List<int> bytes,
     required String filename,
   }) async {
-    final url = Uri.parse('$baseUrl/stories');
+    final endpoint = token != null ? "stories" : "stories/guest";
+    final url = Uri.parse('$baseUrl/$endpoint');
     final requestHeader = {"Content-Type": "multipart/form-data"};
     if (token != null) {
       requestHeader["Authorization"] = "Bearer $token";

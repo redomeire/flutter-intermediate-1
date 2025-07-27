@@ -11,8 +11,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
-import '../../styles/typography/app_typography.dart';
-
 final router = GoRouter(
   routes: [
     ShellRoute(
@@ -77,7 +75,6 @@ final router = GoRouter(
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.secondary,
                             ),
-                            Text("home", style: AppTextStyles.labelSmall),
                           ],
                         ),
                       ),
@@ -104,7 +101,6 @@ final router = GoRouter(
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.secondary,
                             ),
-                            Text("Add story", style: AppTextStyles.labelSmall),
                           ],
                         ),
                       ),
@@ -119,17 +115,16 @@ final router = GoRouter(
                       onTap: () async {
                         await sharedPreferencesService.deleteUserData();
                         Future.delayed(Duration(seconds: 1));
-                        context.go("/");
+                        if (context.mounted) {
+                          context.go("/");
+                        }
                       },
                       child: SizedBox(
                         width: 60, // pastikan width = height untuk lingkaran
                         height: 60,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.logout_outlined, size: 24),
-                            Text("Logout", style: AppTextStyles.labelSmall),
-                          ],
+                          children: [Icon(Icons.logout_outlined, size: 24)],
                         ),
                       ),
                     ),
@@ -152,10 +147,7 @@ final router = GoRouter(
     final authPath = ["/onboarding", "/login", "/register"];
     final isAuthPath = authPath.contains(path);
     final isPrivate =
-        path == "/" ||
-        path.startsWith("/story/") ||
-        path == "/test" ||
-        path == "/add-story";
+        path == "/" || path.startsWith("/story/") || path == "/test";
 
     if (!isLoggedIn) {
       if (isPrivate) {

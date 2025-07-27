@@ -11,6 +11,7 @@ class StoryList extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.builder(
+          physics: NeverScrollableScrollPhysics(),
           itemCount: listStory.length,
           itemBuilder: (context, index) {
             final story = listStory[index];

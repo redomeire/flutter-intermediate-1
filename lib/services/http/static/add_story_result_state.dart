@@ -9,7 +9,7 @@ class AddStoryResultSuccess extends AddStoryResultState {
   AddStoryResultSuccess({required this.message});
 }
 
-class AddStoryResultError extends AddStoryResultState {
+class AddStoryResultFailed extends AddStoryResultState {
   String message;
-  AddStoryResultError({required this.message});
+  AddStoryResultFailed({required this.message});
 }

@@ -44,7 +44,10 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
               GetStoriesResultSuccess(listStory: var listStory) =>
-                SingleChildScrollView(child: StoryList(listStory: listStory)),
+                SingleChildScrollView(
+                  physics: ScrollPhysics(),
+                  child: StoryList(listStory: listStory),
+                ),
               GetStoriesResultError() => Center(
                 child: Text("Sorry, error happened"),
               ),

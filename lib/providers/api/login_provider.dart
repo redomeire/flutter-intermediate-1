@@ -24,11 +24,15 @@ class LoginProvider extends ChangeNotifier {
 
   bool get error => _error;
 
-  void initResultState() async {
-    _loginResultState = LoginResultNone();
-  }
+  String email = "";
+
+  String password = "";
+
+  bool isObscureText = true;
 
   Future<void> login({required String email, required String password}) async {
+    _loginResultState = LoginResultNone();
+    notifyListeners();
     try {
       _loginResultState = LoginResultLoading();
       _message = "";
