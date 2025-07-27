@@ -54,7 +54,9 @@ final router = GoRouter(
                     color: Colors.transparent,
                     // atau warna background jika ingin
                     child: InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        context.go("/");
+                      },
                       child: SizedBox(
                         width: 60, // pastikan width = height untuk lingkaran
                         height: 60,
@@ -106,7 +108,6 @@ final router = GoRouter(
       },
     ),
   ],
-  initialLocation: "/onboarding",
   errorBuilder: (_, _) => NotFoundScreen(),
   redirect: (context, state) async {
     final sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
@@ -114,11 +115,11 @@ final router = GoRouter(
 
     final isLoggedIn = sharedPreferencesProvider.user != null;
     final authPath = ["/onboarding", "/login", "/register"];
-    final privatePath = ["/", "/detail"];
+    final privatePath = ["/", "/story/:storyId"];
 
     if (!isLoggedIn) {
       if (privatePath.contains(state.uri.path)) {
-        return "/login";
+        return "/onboarding";
       }
       return state.uri.path;
     }

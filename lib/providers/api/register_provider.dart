@@ -15,6 +15,10 @@ class RegisterProvider extends ChangeNotifier {
 
   String get message => _message;
 
+  bool _error = false;
+
+  bool get error => _error;
+
   Future<void> register({
     required String name,
     required String email,
@@ -22,6 +26,9 @@ class RegisterProvider extends ChangeNotifier {
   }) async {
     try {
       _registerResultState = RegisterResultLoading();
+      _message = "";
+      _error = false;
+      notifyListeners();
       final result = await apiService.register(
         name: name,
         email: email,
@@ -30,14 +37,17 @@ class RegisterProvider extends ChangeNotifier {
       if (!result.error) {
         _registerResultState = RegisterResultSuccess(result.message);
         _message = "Register Successful";
+        _error = false;
       } else {
         _registerResultState = RegisterResultFailed(result.message);
         _message = "Register Failed";
+        _error = true;
       }
+      notifyListeners();
     } catch (e) {
       _registerResultState = RegisterResultFailed("Failed to register");
+      _error = true;
       _message = "Register Failed";
-    } finally {
       notifyListeners();
     }
   }

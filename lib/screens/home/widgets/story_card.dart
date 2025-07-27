@@ -9,7 +9,7 @@ class StoryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        context.go("/details");
+        context.go("/story/${1}");
       },
       child: ConstrainedBox(
         constraints: BoxConstraints(minHeight: 100, maxHeight: 100),

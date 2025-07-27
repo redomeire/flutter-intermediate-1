@@ -61,13 +61,15 @@ class ApiService {
     required File photo,
     required num lat,
     required num lon,
-    required String token,
+    String? token,
   }) async {
     final url = Uri.parse('$baseUrl/stories');
     final requestHeader = {
-      "Authorization": "Bearer $token",
       "Content-Type": "multipart/form-data",
     };
+    if (token != null) {
+      requestHeader["Authorization"] = "Bearer $token";
+    }
     final response = await client.post(
       url,
       headers: requestHeader,
