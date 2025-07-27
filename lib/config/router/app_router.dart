@@ -35,7 +35,7 @@ final router = GoRouter(
       routes: [
         GoRoute(path: '/', builder: (_, _) => HomeScreen()),
         GoRoute(
-          path: '/add-item',
+          path: '/add-story',
           builder: (context, state) => AddStoryScreen(),
         ),
         GoRoute(
@@ -89,7 +89,7 @@ final router = GoRouter(
                     color: Colors.transparent,
                     child: InkWell(
                       onTap: () {
-                        context.go("/test");
+                        context.go("/add-story");
                       },
                       child: SizedBox(
                         width: 60,
@@ -98,15 +98,13 @@ final router = GoRouter(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              path == '/test'
-                                  ? Icons.home
-                                  : Icons.home_outlined,
+                              Icons.add,
                               size: 24,
-                              color: path == '/test'
+                              color: path == '/add-story'
                                   ? Theme.of(context).colorScheme.primary
                                   : Theme.of(context).colorScheme.secondary,
                             ),
-                            Text("test", style: AppTextStyles.labelSmall),
+                            Text("Add story", style: AppTextStyles.labelSmall),
                           ],
                         ),
                       ),
@@ -157,7 +155,7 @@ final router = GoRouter(
         path == "/" ||
         path.startsWith("/story/") ||
         path == "/test" ||
-        path == "/add-item";
+        path == "/add-story";
 
     if (!isLoggedIn) {
       if (isPrivate) {
