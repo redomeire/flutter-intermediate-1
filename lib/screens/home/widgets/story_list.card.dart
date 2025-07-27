@@ -1,17 +1,22 @@
+import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/story_card.dart';
 import 'package:flutter/material.dart';
 
 class StoryList extends StatelessWidget {
-  const StoryList({super.key});
+  final List<Story> listStory;
+  const StoryList({super.key, required this.listStory});
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
         return GridView.builder(
-          itemCount: 5,
+          itemCount: listStory.length,
           itemBuilder: (context, index) {
-            return StoryCard();
+            final story = listStory[index];
+            return StoryCard(
+              story: story
+            );
           },
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

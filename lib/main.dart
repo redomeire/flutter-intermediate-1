@@ -1,5 +1,8 @@
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/app_router.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/config/theme/app_theme.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_story_detail_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/login_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/register_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
@@ -45,6 +48,18 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (context) =>
               RegisterProvider(apiService: context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              GetStoriesProvider(apiService: context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              GetStoryDetailProvider(apiService: context.read<ApiService>()),
+        ),
+        ChangeNotifierProvider(
+          create: (context) =>
+              AddStoryProvider(apiService: context.read<ApiService>()),
         ),
       ],
       child: MaterialApp.router(

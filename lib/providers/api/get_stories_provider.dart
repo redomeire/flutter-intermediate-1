@@ -19,8 +19,12 @@ class GetStoriesProvider extends ChangeNotifier {
 
   bool get error => _error;
 
-  Future<void> getStories({int? page, int? size, int? location}) async {
-    _responseState = GetStoriesResultNone();
+  Future<void> getStories({
+    int? page,
+    int? size,
+    int? location,
+    required String token,
+  }) async {
     _error = false;
     _message = "";
     notifyListeners();
@@ -31,6 +35,7 @@ class GetStoriesProvider extends ChangeNotifier {
         page: page,
         size: size,
         location: location,
+        token: token,
       );
       if (result.error == false) {
         _responseState = GetStoriesResultSuccess(
@@ -41,14 +46,14 @@ class GetStoriesProvider extends ChangeNotifier {
         _message = result.message;
       } else {
         _responseState = GetStoriesResultError(message: result.message);
-        _error = false;
+        _error = true;
         _message = result.message;
       }
       notifyListeners();
     } catch (e) {
       final message = "Cannot get stories";
       _responseState = GetStoriesResultError(message: message);
-      _error = false;
+      _error = true;
       _message = message;
       notifyListeners();
     }

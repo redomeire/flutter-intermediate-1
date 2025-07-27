@@ -5,6 +5,7 @@ import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/register/regi
 import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/detail_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/home_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/not-found/not-found.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/test_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -37,6 +38,7 @@ final router = GoRouter(
           builder: (context, state) =>
               DetailScreen(storyId: state.pathParameters["storyId"]),
         ),
+        GoRoute(path: '/test', builder: (_, _) => TestScreen()),
       ],
       builder: (context, state, child) {
         final path = state.uri.path;
@@ -71,6 +73,33 @@ final router = GoRouter(
                                   : Theme.of(context).colorScheme.secondary,
                             ),
                             Text("home", style: AppTextStyles.labelSmall),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                ClipOval(
+                  child: Material(
+                    color: Colors.transparent,
+                    child: InkWell(
+                      onTap: () {
+                        context.go("/test");
+                      },
+                      child: SizedBox(
+                        width: 60,
+                        height: 60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              path == '/test' ? Icons.home : Icons.home_outlined,
+                              size: 24,
+                              color: path == '/test'
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.secondary,
+                            ),
+                            Text("test", style: AppTextStyles.labelSmall),
                           ],
                         ),
                       ),
@@ -115,7 +144,7 @@ final router = GoRouter(
 
     final isLoggedIn = sharedPreferencesProvider.user != null;
     final authPath = ["/onboarding", "/login", "/register"];
-    final privatePath = ["/", "/story/:storyId"];
+    final privatePath = ["/", "/story/:storyId", "/test"];
 
     if (!isLoggedIn) {
       if (privatePath.contains(state.uri.path)) {

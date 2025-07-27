@@ -1,9 +1,12 @@
+import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/styles/typography/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class StoryCard extends StatelessWidget {
-  const StoryCard({super.key});
+  final Story story;
+
+  const StoryCard({super.key, required this.story});
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class StoryCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              "Card Title",
+              story.name,
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
               ),
@@ -25,8 +28,7 @@ class StoryCard extends StatelessWidget {
             Expanded(
               child: FadeInImage.assetNetwork(
                 placeholder: "images/elementor-placeholder-image.webp",
-                image:
-                    "https://images.unsplash.com/photo-1752880051996-9b116757b970?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+                image: story.photoUrl,
               ),
             ),
           ],

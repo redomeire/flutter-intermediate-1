@@ -20,11 +20,12 @@ class ApiService {
     required String email,
     required String password,
   }) async {
+    final requestHeader = {"Content-Type": "application/json"};
     final url = Uri.parse('$baseUrl/register');
     final response = await client.post(
       url,
       body: jsonEncode({"name": name, "email": email, "password": password}),
-      headers: {"Content-Type": "application/json"},
+      headers: requestHeader,
     );
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -40,11 +41,12 @@ class ApiService {
     required String email,
     required String password,
   }) async {
+    final requestHeader = {"Content-Type": "application/json"};
     final url = Uri.parse('$baseUrl/login');
     final response = await client.post(
       url,
       body: jsonEncode({"email": email, "password": password}),
-      headers: {"Content-Type": "application/json"},
+      headers: requestHeader,
     );
 
     if (response.statusCode == 200) {
@@ -64,9 +66,7 @@ class ApiService {
     String? token,
   }) async {
     final url = Uri.parse('$baseUrl/stories');
-    final requestHeader = {
-      "Content-Type": "multipart/form-data",
-    };
+    final requestHeader = {"Content-Type": "multipart/form-data"};
     if (token != null) {
       requestHeader["Authorization"] = "Bearer $token";
     }
@@ -90,45 +90,17 @@ class ApiService {
     }
   }
 
-  Future<AddNewStoryResult> addNewStoryGuest({
-    required String description,
-    required File photo,
-    required num lat,
-    required num lon,
-  }) async {
-    final url = Uri.parse('$baseUrl/stories/guest');
-    final requestHeader = {"Content-Type": "multipart/form-data"};
-    final response = await client.post(
-      url,
-      headers: requestHeader,
-      body: jsonEncode({
-        "description": description,
-        "photo": photo,
-        "lat": lat,
-        "lon": lon,
-      }),
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final json = jsonDecode(response.body);
-      final result = AddNewStoryResult.fromJson(json);
-      return result;
-    } else {
-      throw Exception("Failed to add new story as guest");
-    }
-  }
-
   Future<GetAllStoriesResult> getAllStories({
     int? page,
     int? size,
     int? location,
+    required String token,
   }) async {
-    final url = Uri.https(baseUrl, "/stories", {
-      "page": page,
-      "size": size,
-      "location": location,
-    });
-    final response = await client.get(url);
+    final requestHeader = {"Authorization": "Bearer $token"};
+    final url = Uri.parse(
+      "$baseUrl/stories",
+    );
+    final response = await client.get(url, headers: requestHeader);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final json = jsonDecode(response.body);
@@ -140,8 +112,9 @@ class ApiService {
   }
 
   Future<DetailStoryResult> getStoryDetail(int id) async {
+    final requestHeader = {"Content-Type": "application/json"};
     final url = Uri.parse("$baseUrl/stories/$id");
-    final response = await client.get(url);
+    final response = await client.get(url, headers: requestHeader);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final json = jsonDecode(response.body);
