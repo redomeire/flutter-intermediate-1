@@ -19,7 +19,7 @@ class GetStoryDetailProvider extends ChangeNotifier {
 
   bool get error => _error;
 
-  Future<void> getStoryDetail(int id) async {
+  Future<void> getStoryDetail(String id, String token) async {
     _responseState = GetStoryDetailResultNone();
     _message = "";
     _error = false;
@@ -27,7 +27,7 @@ class GetStoryDetailProvider extends ChangeNotifier {
     try {
       _responseState = GetStoryDetailResultLoading();
       notifyListeners();
-      final result = await apiService.getStoryDetail(id);
+      final result = await apiService.getStoryDetail(id, token);
       if (result.error == false) {
         _responseState = GetStoryDetailResultSuccess(
           message: message,

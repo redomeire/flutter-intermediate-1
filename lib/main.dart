@@ -9,11 +9,13 @@ import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferenc
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/local/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeDateFormatting('id_ID');
   final sharedPreferences = await SharedPreferences.getInstance();
   runApp(MyApp(sharedPreferences: sharedPreferences));
 }

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:belajar_aplikasi_flutter_intermediate/models/result/add_new_story_result.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/models/result/detail_story_result.dart';
@@ -60,33 +60,40 @@ class ApiService {
 
   Future<AddNewStoryResult> addNewStory({
     required String description,
-    required File photo,
-    required num lat,
-    required num lon,
     String? token,
+    required List<int> bytes,
+    required String filename,
   }) async {
     final url = Uri.parse('$baseUrl/stories');
     final requestHeader = {"Content-Type": "multipart/form-data"};
     if (token != null) {
       requestHeader["Authorization"] = "Bearer $token";
     }
-    final response = await client.post(
-      url,
-      headers: requestHeader,
-      body: jsonEncode({
-        "description": description,
-        "photo": photo,
-        "lat": lat,
-        "lon": lon,
-      }),
+    final request = http.MultipartRequest('POST', url);
+    final multipartFile = http.MultipartFile.fromBytes(
+      "photo",
+      bytes,
+      filename: filename,
     );
+    final Map<String, String> fields = {"description": description};
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      final json = jsonDecode(response.body);
-      final result = AddNewStoryResult.fromJson(json);
-      return result;
+    request.files.add(multipartFile);
+    request.fields.addAll(fields);
+    request.headers.addAll(requestHeader);
+
+    final http.StreamedResponse streamedResponse = await request.send();
+    final int statusCode = streamedResponse.statusCode;
+
+    final Uint8List responseList = await streamedResponse.stream.toBytes();
+    final String responseData = String.fromCharCodes(responseList);
+
+    if (statusCode == 201) {
+      final AddNewStoryResult uploadResponse = AddNewStoryResult.fromJson(
+        responseData,
+      );
+      return uploadResponse;
     } else {
-      throw Exception("Failed to add new story");
+      throw Exception("Upload file error");
     }
   }
 
@@ -97,9 +104,7 @@ class ApiService {
     required String token,
   }) async {
     final requestHeader = {"Authorization": "Bearer $token"};
-    final url = Uri.parse(
-      "$baseUrl/stories",
-    );
+    final url = Uri.parse("$baseUrl/stories");
     final response = await client.get(url, headers: requestHeader);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
@@ -111,8 +116,8 @@ class ApiService {
     }
   }
 
-  Future<DetailStoryResult> getStoryDetail(int id) async {
-    final requestHeader = {"Content-Type": "application/json"};
+  Future<DetailStoryResult> getStoryDetail(String id, String token) async {
+    final requestHeader = {"Authorization": "Bearer $token"};
     final url = Uri.parse("$baseUrl/stories/$id");
     final response = await client.get(url, headers: requestHeader);
 

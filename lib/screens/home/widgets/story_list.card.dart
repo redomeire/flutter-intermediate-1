@@ -14,9 +14,7 @@ class StoryList extends StatelessWidget {
           itemCount: listStory.length,
           itemBuilder: (context, index) {
             final story = listStory[index];
-            return StoryCard(
-              story: story
-            );
+            return StoryCard(story: story);
           },
           shrinkWrap: true,
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

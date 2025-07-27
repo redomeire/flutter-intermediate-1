@@ -1,4 +1,10 @@
+import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_story_detail_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_story_detail_result_state.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/utils/color_randomizer.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/utils/date_formatter.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../styles/typography/app_typography.dart';
 
@@ -12,43 +18,84 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
+  late SharedPreferencesProvider _sharedPreferencesProvider;
+  late GetStoryDetailProvider _getStoryDetailProvider;
+  final avatarColor = getRandomColor();
+
+  @override
+  void initState() {
+    super.initState();
+    _sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
+    _getStoryDetailProvider = context.read<GetStoryDetailProvider>();
+
+    Future.microtask(() async {
+      await _sharedPreferencesProvider.getUserData();
+      await _getStoryDetailProvider.getStoryDetail(
+        widget.storyId ?? "",
+        _sharedPreferencesProvider.user?.token ?? "",
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              spacing: 10,
-              children: [
-                CircleAvatar(child: Text("A")),
-                Column(
+    return Consumer<GetStoryDetailProvider>(
+      builder: (context, state, child) {
+        return switch (state.responseState) {
+          GetStoryDetailResultNone() => const SizedBox(),
+          GetStoryDetailResultLoading() => Center(
+            child: CircularProgressIndicator(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          GetStoryDetailResultSuccess(story: var story) =>
+            SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Card Title",
-                      style: AppTextStyles.titleMedium.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                    Row(
+                      spacing: 10,
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: avatarColor,
+                          foregroundColor: Colors.white,
+                          child: Text(story.name[0]),
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              story.name,
+                              style: AppTextStyles.titleMedium.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              dateFormatter(story.createdAt),
+                              style: AppTextStyles.bodyLargeRegular,
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    Text("18 Juni 2025", style: AppTextStyles.bodyLargeRegular),
+                    SizedBox(height: 20),
+                    FadeInImage.assetNetwork(
+                      placeholder: "images/elementor-placeholder-image.webp",
+                      image: story.photoUrl,
+                    ),
+                    SizedBox(height: 20),
+                    Text(story.description, style: AppTextStyles.labelLarge),
                   ],
                 ),
-              ],
+              ),
             ),
-            SizedBox(height: 20),
-            FadeInImage.assetNetwork(
-              placeholder: "images/elementor-placeholder-image.webp",
-              image:
-                  "https://images.unsplash.com/photo-1752880051996-9b116757b970?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            ),
-            SizedBox(height: 20),
-            Text("lorem ipsum dolor sit amet lorem ipsum dolor sit amet lorem ipsum dolor sit amet", style: AppTextStyles.labelLarge,)
-          ],
-        ),
-      ),
+          GetStoryDetailResultError(message: var message) => Center(
+            child: Text(message),
+          ),
+        };
+      },
     );
   }
 }

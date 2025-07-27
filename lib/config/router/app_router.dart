@@ -1,4 +1,5 @@
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/add_story_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/login/login_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/onboarding/onboarding_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/register/register_screen.dart';
@@ -33,6 +34,10 @@ final router = GoRouter(
     ShellRoute(
       routes: [
         GoRoute(path: '/', builder: (_, _) => HomeScreen()),
+        GoRoute(
+          path: '/add-item',
+          builder: (context, state) => AddStoryScreen(),
+        ),
         GoRoute(
           path: '/story/:storyId',
           builder: (context, state) =>
@@ -93,7 +98,9 @@ final router = GoRouter(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              path == '/test' ? Icons.home : Icons.home_outlined,
+                              path == '/test'
+                                  ? Icons.home
+                                  : Icons.home_outlined,
                               size: 24,
                               color: path == '/test'
                                   ? Theme.of(context).colorScheme.primary
@@ -141,19 +148,25 @@ final router = GoRouter(
   redirect: (context, state) async {
     final sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
     await sharedPreferencesProvider.getUserData();
+    final path = state.uri.path;
 
     final isLoggedIn = sharedPreferencesProvider.user != null;
     final authPath = ["/onboarding", "/login", "/register"];
-    final privatePath = ["/", "/story/:storyId", "/test"];
+    final isAuthPath = authPath.contains(path);
+    final isPrivate =
+        path == "/" ||
+        path.startsWith("/story/") ||
+        path == "/test" ||
+        path == "/add-item";
 
     if (!isLoggedIn) {
-      if (privatePath.contains(state.uri.path)) {
+      if (isPrivate) {
         return "/onboarding";
       }
       return state.uri.path;
     }
 
-    if (authPath.contains(state.uri.path)) {
+    if (isAuthPath) {
       return "/";
     }
 
