@@ -1,5 +1,6 @@
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/login/login_screen.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/onboarding/onboarding_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/register/register_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/detail_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/home_screen.dart';
@@ -8,10 +9,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
+import '../../styles/typography/app_typography.dart';
+
 final router = GoRouter(
   routes: [
     ShellRoute(
       routes: [
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => OnboardingScreen(),
+        ),
         GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
         GoRoute(
           path: '/register',
@@ -19,7 +26,7 @@ final router = GoRouter(
         ),
       ],
       builder: (context, state, child) {
-        return Scaffold(body: child);
+        return child;
       },
     ),
     ShellRoute(
@@ -33,6 +40,8 @@ final router = GoRouter(
       ],
       builder: (context, state, child) {
         final path = state.uri.path;
+        final sharedPreferencesService = context
+            .read<SharedPreferencesProvider>();
 
         return Scaffold(
           body: child,
@@ -40,21 +49,55 @@ final router = GoRouter(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.home,
-                    color: path == '/' ? Colors.blue : Colors.grey,
+                ClipOval(
+                  child: Material(
+                    color: Colors.transparent,
+                    // atau warna background jika ingin
+                    child: InkWell(
+                      onTap: () {},
+                      child: SizedBox(
+                        width: 60, // pastikan width = height untuk lingkaran
+                        height: 60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              path == '/' ? Icons.home : Icons.home_outlined,
+                              size: 24,
+                              color: path == '/'
+                                  ? Theme.of(context).colorScheme.primary
+                                  : Theme.of(context).colorScheme.secondary,
+                            ),
+                            Text("home", style: AppTextStyles.labelSmall),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    context.go("/");
-                  },
                 ),
-                IconButton(
-                  icon: Icon(
-                    Icons.person,
-                    color: path == '/profile' ? Colors.blue : Colors.grey,
+                ClipOval(
+                  child: Material(
+                    color: Colors.transparent,
+                    // atau warna background jika ingin
+                    child: InkWell(
+                      onTap: () async {
+                        await sharedPreferencesService.deleteUserData();
+                        Future.delayed(Duration(seconds: 1));
+                        context.go("/");
+                      },
+                      child: SizedBox(
+                        width: 60, // pastikan width = height untuk lingkaran
+                        height: 60,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.logout_outlined, size: 24),
+                            Text("Logout", style: AppTextStyles.labelSmall),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                  onPressed: () => context.go('/profile'),
                 ),
               ],
             ),
@@ -63,13 +106,14 @@ final router = GoRouter(
       },
     ),
   ],
+  initialLocation: "/onboarding",
   errorBuilder: (_, _) => NotFoundScreen(),
   redirect: (context, state) async {
     final sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
     await sharedPreferencesProvider.getUserData();
 
     final isLoggedIn = sharedPreferencesProvider.user != null;
-    final authPath = ["/login", "/register"];
+    final authPath = ["/onboarding", "/login", "/register"];
     final privatePath = ["/", "/detail"];
 
     if (!isLoggedIn) {

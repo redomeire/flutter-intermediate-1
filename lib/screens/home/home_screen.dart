@@ -1,4 +1,4 @@
-import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/greeting.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/story_list.card.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -11,6 +11,11 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Greeting();
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(child: StoryList()),
+      ),
+    );
   }
 }

@@ -20,9 +20,14 @@ class LoginProvider extends ChangeNotifier {
 
   String get message => _message;
 
+  void initResultState() async {
+    _loginResultState = LoginResultNone();
+  }
+
   Future<void> login({required String email, required String password}) async {
     try {
       _loginResultState = LoginResultLoading();
+      notifyListeners();
       final result = await apiService.login(email: email, password: password);
       if (!result.error) {
         _loginResultState = LoginResultSuccess(result.message, result.user);
@@ -35,7 +40,6 @@ class LoginProvider extends ChangeNotifier {
     } catch (e) {
       _loginResultState = LoginResultFailed("Failed to login");
       _message = e.toString();
-      print(e);
     } finally {
       notifyListeners();
     }

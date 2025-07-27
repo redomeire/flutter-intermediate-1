@@ -5,11 +5,7 @@ class LoginResult {
   String message;
   User user;
 
-  LoginResult({
-    required this.error,
-    required this.message,
-    required this.user,
-  });
+  LoginResult({required this.error, required this.message, required this.user});
 
   factory LoginResult.fromJson(Map<String, dynamic> json) => LoginResult(
     error: json["error"],

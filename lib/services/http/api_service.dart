@@ -12,10 +12,8 @@ class ApiService {
   final String baseUrl;
   final http.Client client;
 
-  ApiService({
-    required this.baseUrl,
-    http.Client? client,
-  }) : client = client ?? http.Client();
+  ApiService({required this.baseUrl, http.Client? client})
+    : client = client ?? http.Client();
 
   Future<RegisterResult> register({
     required String name,

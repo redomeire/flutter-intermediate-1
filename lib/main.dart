@@ -1,4 +1,5 @@
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/app_router.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/config/theme/app_theme.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/login_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/register_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
@@ -46,7 +47,13 @@ class MyApp extends StatelessWidget {
               RegisterProvider(apiService: context.read<ApiService>()),
         ),
       ],
-      child: MaterialApp.router(routerConfig: router),
+      child: MaterialApp.router(
+        title: "Story App",
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
+        routerConfig: router,
+      ),
     );
   }
 }

@@ -40,7 +40,7 @@ class SharedPreferencesProvider extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteUserData() async {
+  Future<void>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         deleteUserData() async {
     try {
       await sharedPreferencesService.deleteUser();
       _user = null;
