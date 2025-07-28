@@ -83,7 +83,9 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      context.go("/add-story");
+                    },
                     child: Text(
                       "Continue as guest",
                       textAlign: TextAlign.center,

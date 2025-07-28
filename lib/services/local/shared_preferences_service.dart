@@ -9,7 +9,6 @@ class SharedPreferencesService {
   SharedPreferencesService(this.sharedPreferences);
 
   Future<void> setUser(User user) async {
-    print(user);
     await sharedPreferences.setString("App.User", jsonEncode(user));
   }
 

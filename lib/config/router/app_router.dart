@@ -1,4 +1,5 @@
-import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/config/router/rules/redirect.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/config/router/widgets/app_bottom_navigation_bar.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/add_story_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/login/login_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/onboarding/onboarding_screen.dart';
@@ -6,10 +7,7 @@ import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/register/regi
 import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/detail_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/home_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/not-found/not-found.dart';
-import 'package:belajar_aplikasi_flutter_intermediate/screens/test_screen.dart';
-import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 
 final router = GoRouter(
   routes: [
@@ -41,125 +39,13 @@ final router = GoRouter(
           builder: (context, state) =>
               DetailScreen(storyId: state.pathParameters["storyId"]),
         ),
-        GoRoute(path: '/test', builder: (_, _) => TestScreen()),
       ],
       builder: (context, state, child) {
         final path = state.uri.path;
-        final sharedPreferencesService = context
-            .read<SharedPreferencesProvider>();
-
-        return Scaffold(
-          body: child,
-          bottomNavigationBar: BottomAppBar(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ClipOval(
-                  child: Material(
-                    color: Colors.transparent,
-                    // atau warna background jika ingin
-                    child: InkWell(
-                      onTap: () {
-                        context.go("/");
-                      },
-                      child: SizedBox(
-                        width: 60, // pastikan width = height untuk lingkaran
-                        height: 60,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              path == '/' ? Icons.home : Icons.home_outlined,
-                              size: 24,
-                              color: path == '/'
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.secondary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                ClipOval(
-                  child: Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () {
-                        context.go("/add-story");
-                      },
-                      child: SizedBox(
-                        width: 60,
-                        height: 60,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.add,
-                              size: 24,
-                              color: path == '/add-story'
-                                  ? Theme.of(context).colorScheme.primary
-                                  : Theme.of(context).colorScheme.secondary,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                ClipOval(
-                  child: Material(
-                    color: Colors.transparent,
-                    // atau warna background jika ingin
-                    child: InkWell(
-                      onTap: () async {
-                        await sharedPreferencesService.deleteUserData();
-                        Future.delayed(Duration(seconds: 1));
-                        if (context.mounted) {
-                          context.go("/");
-                        }
-                      },
-                      child: SizedBox(
-                        width: 60, // pastikan width = height untuk lingkaran
-                        height: 60,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [Icon(Icons.logout_outlined, size: 24)],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
+        return AppBottomNavigationBar(path: path, child: child);
       },
     ),
   ],
   errorBuilder: (_, _) => NotFoundScreen(),
-  redirect: (context, state) async {
-    final sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
-    await sharedPreferencesProvider.getUserData();
-    final path = state.uri.path;
-
-    final isLoggedIn = sharedPreferencesProvider.user != null;
-    final authPath = ["/onboarding", "/login", "/register"];
-    final isAuthPath = authPath.contains(path);
-    final isPrivate =
-        path == "/" || path.startsWith("/story/") || path == "/test";
-
-    if (!isLoggedIn) {
-      if (isPrivate) {
-        return "/onboarding";
-      }
-      return state.uri.path;
-    }
-
-    if (isAuthPath) {
-      return "/";
-    }
-
-    return null;
-  },
+  redirect: redirectRules,
 );

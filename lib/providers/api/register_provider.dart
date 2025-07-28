@@ -25,7 +25,23 @@ class RegisterProvider extends ChangeNotifier {
 
   String password = "";
 
-  bool isObscureText = true;
+  bool _isObscureTextPassword = false;
+
+  bool get isObscureTextPassword => _isObscureTextPassword;
+
+  void toggleIsObscurePassword() {
+    _isObscureTextPassword = !_isObscureTextPassword;
+    notifyListeners();
+  }
+
+  bool _isObscureTextConfirmPassword = false;
+
+  bool get isObscureTextConfirmPassword => _isObscureTextConfirmPassword;
+
+  void toggleIsObscureConfirmPassword() {
+    _isObscureTextConfirmPassword = !_isObscureTextConfirmPassword;
+    notifyListeners();
+  }
 
   Future<void> register({
     required String name,

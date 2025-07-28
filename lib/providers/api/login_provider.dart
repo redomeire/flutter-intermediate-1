@@ -28,7 +28,14 @@ class LoginProvider extends ChangeNotifier {
 
   String password = "";
 
-  bool isObscureText = true;
+  bool _isObscureText = true;
+
+  bool get isObscureText => _isObscureText;
+
+  void toggleObscureText() {
+    _isObscureText = !_isObscureText;
+    notifyListeners();
+  }
 
   Future<void> login({required String email, required String password}) async {
     _loginResultState = LoginResultNone();
