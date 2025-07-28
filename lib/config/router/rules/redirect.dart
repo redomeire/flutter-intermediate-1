@@ -11,12 +11,11 @@ Future<String?> redirectRules(BuildContext context, GoRouterState state) async {
 
   final isLoggedIn = sharedPreferencesProvider.user != null;
   final authPath = ["/onboarding", "/login", "/register"];
+  final isPrivatePath = path == "/" || path.startsWith("/story/");
   final isAuthPath = authPath.contains(path);
-  final isPrivate =
-      path == "/" || path.startsWith("/story/") || path == "/test";
 
   if (!isLoggedIn) {
-    if (isPrivate) return "/onboarding";
+    if (isPrivatePath) return "/onboarding";
     return path;
   }
 

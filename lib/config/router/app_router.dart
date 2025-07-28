@@ -8,44 +8,61 @@ import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/detail_scre
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/home_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/not-found/not-found.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-final router = GoRouter(
-  routes: [
-    ShellRoute(
-      routes: [
-        GoRoute(
-          path: '/onboarding',
-          builder: (context, state) => OnboardingScreen(),
-        ),
-        GoRoute(path: '/login', builder: (context, state) => LoginScreen()),
-        GoRoute(
-          path: '/register',
-          builder: (context, state) => RegisterScreen(),
-        ),
-      ],
-      builder: (context, state, child) {
-        return child;
-      },
-    ),
-    ShellRoute(
-      routes: [
-        GoRoute(path: '/', builder: (_, _) => HomeScreen()),
-        GoRoute(
-          path: '/add-story',
-          builder: (context, state) => AddStoryScreen(),
-        ),
-        GoRoute(
-          path: '/story/:storyId',
-          builder: (context, state) =>
-              DetailScreen(storyId: state.pathParameters["storyId"]),
-        ),
-      ],
-      builder: (context, state, child) {
-        final path = state.uri.path;
-        return AppBottomNavigationBar(path: path, child: child);
-      },
-    ),
-  ],
-  errorBuilder: (_, _) => NotFoundScreen(),
-  redirect: redirectRules,
-);
+GoRouter getRouterConfig(SharedPreferences sharedPreferences) {
+  final userData = sharedPreferences.getString("App.User");
+  final router = GoRouter(
+    initialLocation: userData != null ? "/" : "/onboarding",
+    routes: [
+      ShellRoute(
+        routes: [
+          GoRoute(
+            path: '/onboarding',
+            builder: (context, state) => OnboardingScreen(),
+            routes: [
+              GoRoute(
+                path: '/login',
+                builder: (context, state) => LoginScreen(),
+              ),
+              GoRoute(
+                path: '/register',
+                builder: (context, state) => RegisterScreen(),
+              ),
+            ],
+          ),
+        ],
+        builder: (context, state, child) {
+          return child;
+        },
+      ),
+      ShellRoute(
+        routes: [
+          GoRoute(
+            path: '/',
+            builder: (_, _) => HomeScreen(),
+            routes: [
+              GoRoute(
+                path: '/story/:storyId',
+                builder: (context, state) =>
+                    DetailScreen(storyId: state.pathParameters["storyId"]),
+              ),
+              GoRoute(
+                path: '/add-story',
+                builder: (context, state) => AddStoryScreen(),
+              ),
+            ],
+          ),
+        ],
+        builder: (context, state, child) {
+          final path = state.uri.path;
+          return AppBottomNavigationBar(path: path, child: child);
+        },
+      ),
+    ],
+    errorBuilder: (_, _) => NotFoundScreen(),
+    redirect: redirectRules,
+  );
+
+  return router;
+}

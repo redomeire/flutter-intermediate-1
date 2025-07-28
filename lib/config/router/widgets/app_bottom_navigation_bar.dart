@@ -32,7 +32,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
       body: widget.child,
       bottomNavigationBar: BottomAppBar(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             ClipOval(
               child: Material(
@@ -86,7 +86,30 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                 ),
               ),
             ),
-            ClipOval(
+            _sharedPreferencesProvider.user != null
+                ? ClipOval(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          await _sharedPreferencesProvider.deleteUserData();
+                          Future.delayed(Duration(seconds: 1));
+                          if (context.mounted) {
+                            context.go("/");
+                          }
+                        },
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Icon(Icons.logout_outlined, size: 24)],
+                          ),
+                        ),
+                      ),
+                    ),
+                  )
+                : ClipOval(
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
@@ -94,7 +117,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                     await _sharedPreferencesProvider.deleteUserData();
                     Future.delayed(Duration(seconds: 1));
                     if (context.mounted) {
-                      context.go("/");
+                      context.go("/onboarding/login");
                     }
                   },
                   child: SizedBox(
@@ -102,7 +125,7 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                     height: 60,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.logout_outlined, size: 24)],
+                      children: [Icon(Icons.login_outlined, size: 24)],
                     ),
                   ),
                 ),

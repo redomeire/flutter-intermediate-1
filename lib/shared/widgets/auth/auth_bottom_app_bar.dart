@@ -30,7 +30,11 @@ class AuthBottomAppBar extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      context.go(isLoginPage ? "/register" : "/login");
+                      context.go(
+                        isLoginPage
+                            ? "/onboarding/register"
+                            : "/onboarding/login",
+                      );
                     },
                     child: Text(
                       "${isLoginPage ? "Register" : "Login"} Now",

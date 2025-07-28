@@ -111,29 +111,40 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButtonLocation: ExpandableFab.location,
-      floatingActionButton: FabButton(
-        onGalleryView: _onGalleryView,
-        onCameraView: _onCameraView,
-      ),
-      appBar: AppBar(
-        title: Text("Add Item", style: AppTextStyles.labelLarge),
-        leading: IconButton(
-          onPressed: () {
-            context.go("/");
-          },
-          icon: Icon(Icons.chevron_left),
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (_sharedPreferencesProvider.user == null) {
+          context.go("/onboarding");
+          return;
+        }
+        context.go("/");
+      },
+      child: Scaffold(
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: FabButton(
+          onGalleryView: _onGalleryView,
+          onCameraView: _onCameraView,
         ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: AddStoryForm(
-            showImage: _showImage(),
-            onGalleryView: _onGalleryView,
-            onRemoveImage: _onRemoveImage,
-            onUpload: _onUpload,
+        appBar: AppBar(
+          title: Text("Add Item", style: AppTextStyles.labelLarge),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/");
+            },
+            icon: Icon(Icons.chevron_left),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: AddStoryForm(
+              showImage: _showImage(),
+              onGalleryView: _onGalleryView,
+              onRemoveImage: _onRemoveImage,
+              onUpload: _onUpload,
+            ),
           ),
         ),
       ),
