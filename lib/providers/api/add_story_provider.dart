@@ -63,7 +63,6 @@ class AddStoryProvider extends ChangeNotifier {
         _error = false;
         _message = result.message;
 
-        // mengosongkan gambar
         imageFile = null;
         imagePath = null;
       } else {
@@ -73,7 +72,6 @@ class AddStoryProvider extends ChangeNotifier {
       }
       notifyListeners();
     } catch (e) {
-      print(e);
       final message = "Cannot add new story";
       _responseState = AddStoryResultFailed(message: message);
       _error = true;

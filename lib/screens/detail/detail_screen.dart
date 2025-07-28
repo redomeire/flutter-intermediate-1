@@ -39,63 +39,72 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GetStoryDetailProvider>(
-      builder: (context, state, child) {
-        return switch (state.responseState) {
-          GetStoryDetailResultNone() => const SizedBox(),
-          GetStoryDetailResultLoading() => Center(
-            child: CircularProgressIndicator(
-              color: Theme.of(context).colorScheme.primary,
-            ),
-          ),
-          GetStoryDetailResultSuccess(story: var story) =>
-            SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      spacing: 10,
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Consumer<GetStoryDetailProvider>(
+          builder: (context, state, child) {
+            return switch (state.responseState) {
+              GetStoryDetailResultNone() => const SizedBox(),
+              GetStoryDetailResultLoading() => Center(
+                child: CircularProgressIndicator(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+              ),
+              GetStoryDetailResultSuccess(story: var story) =>
+                SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        CircleAvatar(
-                          backgroundColor: avatarColor,
-                          foregroundColor: Colors.white,
-                          child: Text(story.name[0]),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
+                          spacing: 10,
                           children: [
-                            Text(
-                              story.name,
-                              style: AppTextStyles.titleMedium.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                            CircleAvatar(
+                              backgroundColor: avatarColor,
+                              foregroundColor: Colors.white,
+                              child: Text(story.name[0]),
                             ),
-                            Text(
-                              dateFormatter(story.createdAt),
-                              style: AppTextStyles.bodyLargeRegular,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  story.name,
+                                  style: AppTextStyles.titleMedium.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(
+                                  dateFormatter(story.createdAt),
+                                  style: AppTextStyles.bodyLargeRegular,
+                                ),
+                              ],
                             ),
                           ],
                         ),
+                        SizedBox(height: 20),
+                        FadeInImage.assetNetwork(
+                          placeholder:
+                              "images/elementor-placeholder-image.webp",
+                          image: story.photoUrl,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          story.description,
+                          style: AppTextStyles.labelLarge,
+                        ),
                       ],
                     ),
-                    SizedBox(height: 20),
-                    FadeInImage.assetNetwork(
-                      placeholder: "images/elementor-placeholder-image.webp",
-                      image: story.photoUrl,
-                    ),
-                    SizedBox(height: 20),
-                    Text(story.description, style: AppTextStyles.labelLarge),
-                  ],
+                  ),
                 ),
+              GetStoryDetailResultError(message: var message) => Center(
+                child: Text(message),
               ),
-            ),
-          GetStoryDetailResultError(message: var message) => Center(
-            child: Text(message),
-          ),
-        };
-      },
+            };
+          },
+        ),
+      ),
     );
   }
 }

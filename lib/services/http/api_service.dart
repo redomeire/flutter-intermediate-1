@@ -68,7 +68,7 @@ class ApiService {
     final url = Uri.parse('$baseUrl/$endpoint');
     final requestHeader = {"Content-Type": "multipart/form-data"};
     if (token != null) {
-      requestHeader["Authorization"] = "Bearer $token";
+      requestHeader.addAll({"Authorization": "Bearer $token"});
     }
     final request = http.MultipartRequest('POST', url);
     final multipartFile = http.MultipartFile.fromBytes(

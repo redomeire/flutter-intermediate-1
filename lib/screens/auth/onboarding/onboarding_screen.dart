@@ -41,7 +41,7 @@ class OnboardingScreen extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: ElevatedButton(
                       onPressed: () {
-                        context.go("/login");
+                        context.go("/onboarding/login");
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black87,
@@ -62,7 +62,7 @@ class OnboardingScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: OutlinedButton(
                       onPressed: () {
-                        context.go("/register");
+                        context.go("/onboarding/register");
                       },
                       style: OutlinedButton.styleFrom(
                         shape: RoundedRectangleBorder(
@@ -83,7 +83,9 @@ class OnboardingScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 30),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      context.go("/add-story");
+                    },
                     child: Text(
                       "Continue as guest",
                       textAlign: TextAlign.center,

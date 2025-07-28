@@ -9,14 +9,13 @@ class SharedPreferencesService {
   SharedPreferencesService(this.sharedPreferences);
 
   Future<void> setUser(User user) async {
-    print(user);
     await sharedPreferences.setString("App.User", jsonEncode(user));
   }
 
   Future<User> getUser() async {
     final user = sharedPreferences.getString("App.User");
-    final decodedUser = jsonDecode(user!) as User;
-    return decodedUser;
+    final decodedUser = jsonDecode(user!);
+    return User.fromJson(decodedUser);
   }
 
   Future<void> deleteUser() async {
