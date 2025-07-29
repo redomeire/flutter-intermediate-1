@@ -63,24 +63,32 @@ class _AppMapState extends State<AppMap> {
           myLocationEnabled: true,
         ),
         Positioned(
-          bottom: 16,
+          bottom: 150,
           right: 16,
           child: Column(
             children: [
               FloatingActionButton.small(
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 heroTag: "zoom-in",
                 onPressed: () {
                   mapController.animateCamera(CameraUpdate.zoomIn());
                 },
-                child: const Icon(Icons.add),
+                child: Icon(
+                  Icons.add,
+                  color: Theme.of(context).colorScheme.surface,
+                ),
               ),
               SizedBox(height: 20),
               FloatingActionButton.small(
+                backgroundColor: Theme.of(context).colorScheme.primary,
                 heroTag: "zoom-out",
                 onPressed: () {
                   mapController.animateCamera(CameraUpdate.zoomOut());
                 },
-                child: const Icon(Icons.remove),
+                child: Icon(
+                  Icons.remove,
+                  color: Theme.of(context).colorScheme.surface,
+                ),
               ),
             ],
           ),
@@ -89,8 +97,12 @@ class _AppMapState extends State<AppMap> {
           top: 16,
           right: 16,
           child: FloatingActionButton(
+            backgroundColor: Theme.of(context).colorScheme.primary,
             onPressed: _onCurrentMarkerPressed,
-            child: const Icon(Icons.my_location),
+            child: Icon(
+              Icons.my_location,
+              color: Theme.of(context).colorScheme.surface,
+            ),
           ),
         ),
         if (placemark == null)

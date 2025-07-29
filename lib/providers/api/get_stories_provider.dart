@@ -1,3 +1,4 @@
+import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_stories_result_state.dart';
 import 'package:flutter/material.dart';
@@ -19,21 +20,24 @@ class GetStoriesProvider extends ChangeNotifier {
 
   bool get error => _error;
 
-  Future<void> getStories({
-    int? page,
-    int? size,
-    int? location,
-    required String token,
-  }) async {
+  final List<Story> _listStory = [];
+
+  List<Story> get listStory => _listStory;
+
+  // pagination
+
+  int? pageItems = 1;
+  int sizeItems = 10;
+
+  Future<void> getStories({int? location, required String token}) async {
     _error = false;
     _message = "";
-    notifyListeners();
     try {
       _responseState = GetStoriesResultLoading();
       notifyListeners();
       final result = await apiService.getAllStories(
-        page: page,
-        size: size,
+        page: pageItems,
+        size: sizeItems,
         location: location,
         token: token,
       );
@@ -42,8 +46,15 @@ class GetStoriesProvider extends ChangeNotifier {
           message: message,
           listStory: result.listStory,
         );
+        _listStory.addAll(result.listStory);
         _error = false;
         _message = result.message;
+
+        if (result.listStory.length < sizeItems) {
+          pageItems = null;
+        } else {
+          pageItems = pageItems! + 1;
+        }
       } else {
         _responseState = GetStoriesResultError(message: result.message);
         _error = true;

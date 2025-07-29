@@ -15,11 +15,11 @@ class StoryCard extends StatelessWidget {
         context.go("/story/${story.id}");
       },
       child: ConstrainedBox(
-        constraints: BoxConstraints(minHeight: 100, maxHeight: 100),
+        constraints: BoxConstraints(minHeight: 200, maxHeight: 200),
         child: Column(
           children: [
             Text(
-              story.name,
+              '${story.name} - ${story.id}',
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
               ),

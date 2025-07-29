@@ -1,6 +1,6 @@
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
-import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/story_list.card.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/story_list.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_stories_result_state.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              GetStoriesResultSuccess(listStory: var listStory) =>
-                SingleChildScrollView(
-                  physics: ScrollPhysics(),
-                  child: StoryList(listStory: listStory),
-                ),
+              GetStoriesResultSuccess() => StoryList(),
               GetStoriesResultError() => Center(
                 child: Text("Sorry, error happened"),
               ),

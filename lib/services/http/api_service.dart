@@ -111,7 +111,9 @@ class ApiService {
     required String token,
   }) async {
     final requestHeader = {"Authorization": "Bearer $token"};
-    final url = Uri.parse("$baseUrl/stories");
+    final url = Uri.parse(
+      "$baseUrl/stories?page=$page&size=$size&location=$location",
+    );
     final response = await client.get(url, headers: requestHeader);
 
     if (response.statusCode == 200 || response.statusCode == 201) {
