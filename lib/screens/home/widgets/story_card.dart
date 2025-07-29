@@ -19,7 +19,7 @@ class StoryCard extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              '${story.name} - ${story.id}',
+              story.name,
               style: AppTextStyles.titleMedium.copyWith(
                 fontWeight: FontWeight.bold,
               ),

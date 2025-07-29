@@ -45,7 +45,9 @@ class _AppMapState extends State<AppMap> {
   @override
   Widget build(BuildContext context) {
     if (widget.initialLon == null || widget.initialLat == null) {
-      return Text("Sorry, maps not available due to null values");
+      return Center(
+        child: Text("Sorry, maps not available due to null values"),
+      );
     }
     return Stack(
       children: [

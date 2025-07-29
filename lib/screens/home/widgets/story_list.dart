@@ -63,7 +63,6 @@ class _StoryListState extends State<StoryList> {
             final story = _getStoriesProvider.listStory[index];
             return StoryCard(story: story);
           },
-          shrinkWrap: true,
         );
       },
     );

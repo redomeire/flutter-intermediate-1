@@ -41,24 +41,43 @@ class _AddressDisplayerState extends State<AddressDisplayer> {
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
                     Text(
-                      '${widget.placemark.subLocality}, ${widget.placemark.locality}, ${widget.placemark.postalCode}, ${widget.placemark.country}',
+                      _renderAddressText(),
                       style: Theme.of(context).textTheme.labelLarge,
+                      maxLines:
+                          GoRouter.of(context).state.uri.path ==
+                              "/add-story/map"
+                          ? 1
+                          : 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
             ],
           ),
-          GoRouter.of(context).state.uri.path == "/add-story/map"
-              ? OutlinedButton(
-                  onPressed: () {
-                    context.go("/add-story");
-                  },
-                  child: Text("set mark!"),
-                )
-              : SizedBox(),
+          if (GoRouter.of(context).state.uri.path == "/add-story/map")
+            OutlinedButton(
+              onPressed: () {
+                context.go("/add-story");
+              },
+              child: Text("set mark!"),
+            )
+          else
+            SizedBox(),
         ],
       ),
     );
+  }
+
+  _renderAddressText() {
+    final addressList = [
+      widget.placemark.subLocality,
+      widget.placemark.locality,
+      widget.placemark.postalCode,
+      widget.placemark.country,
+    ];
+    return addressList
+        .where((element) => element != null && element.trim().isNotEmpty)
+        .join(', ');
   }
 }

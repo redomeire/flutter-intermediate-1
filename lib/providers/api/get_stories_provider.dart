@@ -24,16 +24,27 @@ class GetStoriesProvider extends ChangeNotifier {
 
   List<Story> get listStory => _listStory;
 
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
+
   // pagination
 
   int? pageItems = 1;
   int sizeItems = 10;
 
   Future<void> getStories({int? location, required String token}) async {
+    if (_isLoading || pageItems == null) return; // prevent duplicate calls
+
+    _isLoading = true;
+    notifyListeners();
+
     _error = false;
     _message = "";
     try {
-      _responseState = GetStoriesResultLoading();
+      if (_listStory.isEmpty) {
+        _responseState = GetStoriesResultLoading();
+      }
       notifyListeners();
       final result = await apiService.getAllStories(
         page: pageItems,
@@ -66,6 +77,9 @@ class GetStoriesProvider extends ChangeNotifier {
       _responseState = GetStoriesResultError(message: message);
       _error = true;
       _message = message;
+      notifyListeners();
+    } finally {
+      _isLoading = false;
       notifyListeners();
     }
   }

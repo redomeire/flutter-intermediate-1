@@ -20,6 +20,14 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return BottomSheetBar(
+      boxShadows: [
+        BoxShadow(
+          color: Colors.grey.withValues(alpha: 0.5),
+          spreadRadius: 5.0,
+          blurRadius: 32.0,
+          offset: const Offset(0, 0), // changes position of shadow
+        ),
+      ],
       borderRadius: BorderRadius.only(
         topLeft: Radius.circular(10),
         topRight: Radius.circular(10),
