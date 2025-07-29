@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/get_latlng_from_map_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/widget/add_story_form.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/widget/fab_button.dart';
@@ -23,6 +24,57 @@ class AddStoryScreen extends StatefulWidget {
 class _AddStoryScreenState extends State<AddStoryScreen> {
   late AddStoryProvider _addStoryProvider;
   late SharedPreferencesProvider _sharedPreferencesProvider;
+  late GetLatLngFromMapProvider _getLatLngFromMapProvider;
+
+  @override
+  void initState() {
+    super.initState();
+    _addStoryProvider = context.read<AddStoryProvider>();
+    _sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
+    _getLatLngFromMapProvider = context.read<GetLatLngFromMapProvider>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) async {
+        if (didPop) return;
+        if (_sharedPreferencesProvider.user == null) {
+          context.go("/onboarding");
+          return;
+        }
+        context.go("/");
+      },
+      child: Scaffold(
+        floatingActionButtonLocation: ExpandableFab.location,
+        floatingActionButton: FabButton(
+          onGalleryView: _onGalleryView,
+          onCameraView: _onCameraView,
+        ),
+        appBar: AppBar(
+          title: Text("Add Item", style: AppTextStyles.labelLarge),
+          leading: IconButton(
+            onPressed: () {
+              context.go("/");
+            },
+            icon: Icon(Icons.chevron_left),
+          ),
+        ),
+        body: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(10),
+            child: AddStoryForm(
+              showImage: _showImage(),
+              onGalleryView: _onGalleryView,
+              onRemoveImage: _onRemoveImage,
+              onUpload: _onUpload,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   _onGalleryView() async {
     final ImagePicker picker = ImagePicker();
@@ -70,6 +122,8 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       bytes: bytes as List<int>,
       fileName: fileName ?? "",
       token: _sharedPreferencesProvider.user?.token,
+      lat: _getLatLngFromMapProvider.lat,
+      lon: _getLatLngFromMapProvider.lon,
     );
 
     if (!_addStoryProvider.error) {
@@ -100,54 +154,5 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   _onRemoveImage() async {
     _addStoryProvider.setImageFile(null);
     _addStoryProvider.setImagePath("");
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _addStoryProvider = context.read<AddStoryProvider>();
-    _sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
-        if (didPop) return;
-        if (_sharedPreferencesProvider.user == null) {
-          context.go("/onboarding");
-          return;
-        }
-        context.go("/");
-      },
-      child: Scaffold(
-        floatingActionButtonLocation: ExpandableFab.location,
-        floatingActionButton: FabButton(
-          onGalleryView: _onGalleryView,
-          onCameraView: _onCameraView,
-        ),
-        appBar: AppBar(
-          title: Text("Add Item", style: AppTextStyles.labelLarge),
-          leading: IconButton(
-            onPressed: () {
-              context.go("/");
-            },
-            icon: Icon(Icons.chevron_left),
-          ),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(10),
-            child: AddStoryForm(
-              showImage: _showImage(),
-              onGalleryView: _onGalleryView,
-              onRemoveImage: _onRemoveImage,
-              onUpload: _onUpload,
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

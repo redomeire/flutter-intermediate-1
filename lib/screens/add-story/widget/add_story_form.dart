@@ -1,4 +1,6 @@
+import 'package:belajar_aplikasi_flutter_intermediate/providers/get_latlng_from_map_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../../providers/api/add_story_provider.dart';
@@ -25,11 +27,13 @@ class AddStoryForm extends StatefulWidget {
 
 class _AddStoryFormState extends State<AddStoryForm> {
   late AddStoryProvider _addStoryProvider;
+  late GetLatLngFromMapProvider _getLatLngFromMapProvider;
 
   @override
   void initState() {
     super.initState();
     _addStoryProvider = context.read<AddStoryProvider>();
+    _getLatLngFromMapProvider = context.read<GetLatLngFromMapProvider>();
   }
 
   @override
@@ -101,7 +105,6 @@ class _AddStoryFormState extends State<AddStoryForm> {
                 },
               ),
               SizedBox(height: 15),
-              SizedBox(height: 5),
               SizedBox(
                 width: double.infinity,
                 child: Consumer<AddStoryProvider>(
@@ -110,6 +113,53 @@ class _AddStoryFormState extends State<AddStoryForm> {
                   ).addStoryButtonBuilder,
                 ),
               ),
+              SizedBox(height: 15),
+              context.watch<GetLatLngFromMapProvider>().lat != null
+                  ? TextField(
+                      readOnly: true,
+                      minLines: 5,
+                      maxLines: null,
+                      style: AppTextStyles.bodyLargeMedium,
+                      controller: TextEditingController(
+                        text:
+                            "${context.watch<GetLatLngFromMapProvider>().lat} - ${context.watch<GetLatLngFromMapProvider>().lon}",
+                      ),
+                      decoration: InputDecoration(
+                        hint: Text(
+                          "Enter your latitude and longitude",
+                          style: AppTextStyles.bodyLargeMedium,
+                        ),
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(8),
+                          borderSide: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1.5,
+                          ), // border saat focus
+                        ),
+                      ),
+                      onChanged: (val) {
+                        _addStoryProvider.description = val;
+                      },
+                    )
+                  : SizedBox(),
+              SizedBox(height: 15),
+              context.watch<GetLatLngFromMapProvider>().lat == null
+                  ? (OutlinedButton(
+                      onPressed: () {
+                        context.go("/add-story/map");
+                      },
+                      style: ButtonStyle(),
+                      child: Text("Add location"),
+                    ))
+                  : OutlinedButton(
+                      onPressed: _getLatLngFromMapProvider.clearLocation,
+                      child: Text("Clear location"),
+                    ),
             ],
           ),
         ),

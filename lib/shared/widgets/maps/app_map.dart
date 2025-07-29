@@ -1,21 +1,24 @@
-import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
-import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/widgets/address_displayer.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/get_latlng_from_map_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/shared/widgets/maps/address_displayer.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoding/geocoding.dart' as geo;
+import 'package:provider/provider.dart';
 
 class AppMap extends StatefulWidget {
-  final Story story;
+  final double? initialLat;
+  final double? initialLon;
 
-  const AppMap({super.key, required this.story});
+  const AppMap({super.key, required this.initialLat, required this.initialLon});
 
   @override
   State<AppMap> createState() => _AppMapState();
 }
 
 class _AppMapState extends State<AppMap> {
+  late GetLatLngFromMapProvider _getLatLngFromMapProvider;
   final Set<Marker> markers = {};
   late GoogleMapController mapController;
   late LatLng location;
@@ -24,10 +27,11 @@ class _AppMapState extends State<AppMap> {
   @override
   void initState() {
     super.initState();
-    location = LatLng(
-      widget.story.lat ?? -7.456154,
-      widget.story.lon ?? 112.425206,
-    );
+    _getLatLngFromMapProvider = context.read<GetLatLngFromMapProvider>();
+    if (widget.initialLon == null || widget.initialLat == null) {
+      return;
+    }
+    location = LatLng(widget.initialLat ?? 0, widget.initialLon ?? 0);
     final marker = Marker(
       markerId: const MarkerId("source"),
       position: location,
@@ -40,8 +44,8 @@ class _AppMapState extends State<AppMap> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.story.lat == null || widget.story.lon == null) {
-      return Center(child: Text("Sorry, can't display maps due to null value"));
+    if (widget.initialLon == null || widget.initialLat == null) {
+      return Text("Sorry, maps not available due to null values");
     }
     return Stack(
       children: [
@@ -50,10 +54,7 @@ class _AppMapState extends State<AppMap> {
           onMapCreated: _onMapCreated,
           onLongPress: _onLongPressedGoogleMap,
           initialCameraPosition: CameraPosition(
-            target: LatLng(
-              widget.story.lat ?? -7.456154,
-              widget.story.lon ?? 112.425206,
-            ),
+            target: LatLng(widget.initialLat ?? 0, widget.initialLon ?? 0),
             zoom: 18,
           ),
           myLocationButtonEnabled: false,
@@ -190,6 +191,8 @@ class _AppMapState extends State<AppMap> {
     _defineMarker(latLng, street, address);
 
     mapController.animateCamera(CameraUpdate.newLatLng(latLng));
+
+    _getLatLngFromMapProvider.setLocation(latLng);
   }
 
   void _defineMarker(LatLng latLng, String street, String address) {

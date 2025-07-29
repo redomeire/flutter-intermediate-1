@@ -1,5 +1,6 @@
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/rules/redirect.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/widgets/app_bottom_navigation_bar.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story-map/add_story_map_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/add_story_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/login/login_screen.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/auth/onboarding/onboarding_screen.dart';
@@ -50,6 +51,12 @@ GoRouter getRouterConfig(SharedPreferences sharedPreferences) {
               GoRoute(
                 path: '/add-story',
                 builder: (context, state) => AddStoryScreen(),
+                routes: [
+                  GoRoute(
+                    path: '/map',
+                    builder: (context, state) => AddStoryMapScreen(),
+                  )
+                ]
               ),
             ],
           ),

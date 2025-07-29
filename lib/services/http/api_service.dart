@@ -63,6 +63,8 @@ class ApiService {
     String? token,
     required List<int> bytes,
     required String filename,
+    double? lat,
+    double? lon,
   }) async {
     final endpoint = token != null ? "stories" : "stories/guest";
     final url = Uri.parse('$baseUrl/$endpoint');
@@ -76,7 +78,11 @@ class ApiService {
       bytes,
       filename: filename,
     );
-    final Map<String, String> fields = {"description": description};
+    final Map<String, String> fields = {
+      "description": description,
+      "lat": lat.toString(),
+      "lon": lon.toString(),
+    };
 
     request.files.add(multipartFile);
     request.fields.addAll(fields);

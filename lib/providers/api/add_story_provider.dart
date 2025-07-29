@@ -44,6 +44,8 @@ class AddStoryProvider extends ChangeNotifier {
     required List<int> bytes,
     required String fileName,
     String? token,
+    double? lat,
+    double? lon,
   }) async {
     _responseState = AddStoryResultNone();
     _error = false;
@@ -57,6 +59,8 @@ class AddStoryProvider extends ChangeNotifier {
         token: token,
         bytes: bytes,
         filename: fileName,
+        lat: lat,
+        lon: lon,
       );
       if (result.error == false) {
         _responseState = AddStoryResultSuccess(message: message);

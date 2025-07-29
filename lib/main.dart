@@ -5,6 +5,7 @@ import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_story_detail_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/login_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/register_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/get_latlng_from_map_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/local/shared_preferences_service.dart';
@@ -63,6 +64,7 @@ class MyApp extends StatelessWidget {
           create: (context) =>
               AddStoryProvider(apiService: context.read<ApiService>()),
         ),
+        ChangeNotifierProvider(create: (context) => GetLatLngFromMapProvider()),
       ],
       child: MaterialApp.router(
         title: "Story App",

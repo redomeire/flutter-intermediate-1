@@ -1,7 +1,8 @@
 import "package:belajar_aplikasi_flutter_intermediate/models/story.dart";
-import "package:belajar_aplikasi_flutter_intermediate/screens/detail/widgets/app_map.dart";
 import "package:bottom_sheet_bar/bottom_sheet_bar.dart";
 import "package:flutter/material.dart";
+
+import "../../../shared/widgets/maps/app_map.dart";
 
 class AppBottomSheet extends StatefulWidget {
   final Widget child;
@@ -27,7 +28,10 @@ class _AppBottomSheetState extends State<AppBottomSheet> {
       color: Theme.of(context).colorScheme.surface,
       body: AbsorbPointer(
         absorbing: _bsbController.isExpanded,
-        child: AppMap(story: widget.story),
+        child: AppMap(
+          initialLat: widget.story.lat,
+          initialLon: widget.story.lon,
+        ),
       ),
       collapsed: InkWell(
         onTap: () {
