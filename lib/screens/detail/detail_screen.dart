@@ -1,5 +1,6 @@
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_story_detail_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/screens/detail/widgets/app_bottom_sheet.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_story_detail_result_state.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/utils/color_randomizer.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/utils/date_formatter.dart';
@@ -39,9 +40,8 @@ class _DetailScreenState extends State<DetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
+    return Scaffold(
+      body: SafeArea(
         child: Consumer<GetStoryDetailProvider>(
           builder: (context, state, child) {
             return switch (state.responseState) {
@@ -51,53 +51,49 @@ class _DetailScreenState extends State<DetailScreen> {
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              GetStoryDetailResultSuccess(story: var story) =>
-                SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          spacing: 10,
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: avatarColor,
-                              foregroundColor: Colors.white,
-                              child: Text(story.name[0]),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  story.name,
-                                  style: AppTextStyles.titleMedium.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                  ),
+              GetStoryDetailResultSuccess(story: var story) => AppBottomSheet(
+                story: story,
+                child: Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        spacing: 10,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: avatarColor,
+                            foregroundColor: Colors.white,
+                            child: Text(story.name[0]),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                story.name,
+                                style: AppTextStyles.titleMedium.copyWith(
+                                  fontWeight: FontWeight.bold,
                                 ),
-                                Text(
-                                  dateFormatter(story.createdAt),
-                                  style: AppTextStyles.bodyLargeRegular,
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: 20),
-                        FadeInImage.assetNetwork(
-                          placeholder:
-                              "images/elementor-placeholder-image.webp",
-                          image: story.photoUrl,
-                        ),
-                        SizedBox(height: 20),
-                        Text(
-                          story.description,
-                          style: AppTextStyles.labelLarge,
-                        ),
-                      ],
-                    ),
+                              ),
+                              Text(
+                                dateFormatter(story.createdAt),
+                                style: AppTextStyles.bodyLargeRegular,
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      FadeInImage.assetNetwork(
+                        placeholder: "images/elementor-placeholder-image.webp",
+                        image: story.photoUrl,
+                      ),
+                      SizedBox(height: 20),
+                      Text(story.description, style: AppTextStyles.labelLarge),
+                    ],
                   ),
                 ),
+              ),
               GetStoryDetailResultError(message: var message) => Center(
                 child: Text(message),
               ),

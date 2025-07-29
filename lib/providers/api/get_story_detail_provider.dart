@@ -1,3 +1,4 @@
+import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_story_detail_result_state.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,10 @@ class GetStoryDetailProvider extends ChangeNotifier {
 
   bool get error => _error;
 
+  Story? _story;
+
+  Story? get story => _story;
+
   Future<void> getStoryDetail(String id, String token) async {
     _responseState = GetStoryDetailResultNone();
     _message = "";
@@ -35,6 +40,10 @@ class GetStoryDetailProvider extends ChangeNotifier {
         );
         _error = false;
         _message = result.message;
+        _story = result.story;
+        print(
+          "Latitude : ${result.story.lat}, Longitude : ${result.story.lon}",
+        );
       } else {
         _responseState = GetStoryDetailResultError(message: result.message);
         _error = true;

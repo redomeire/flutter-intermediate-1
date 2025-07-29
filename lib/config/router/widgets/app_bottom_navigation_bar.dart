@@ -110,27 +110,27 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                     ),
                   )
                 : ClipOval(
-              child: Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  onTap: () async {
-                    await _sharedPreferencesProvider.deleteUserData();
-                    Future.delayed(Duration(seconds: 1));
-                    if (context.mounted) {
-                      context.go("/onboarding/login");
-                    }
-                  },
-                  child: SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.login_outlined, size: 24)],
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        onTap: () async {
+                          await _sharedPreferencesProvider.deleteUserData();
+                          Future.delayed(Duration(seconds: 1));
+                          if (context.mounted) {
+                            context.go("/onboarding/login");
+                          }
+                        },
+                        child: SizedBox(
+                          width: 60,
+                          height: 60,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [Icon(Icons.login_outlined, size: 24)],
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
