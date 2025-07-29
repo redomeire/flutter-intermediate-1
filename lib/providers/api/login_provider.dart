@@ -8,7 +8,7 @@ class LoginProvider extends ChangeNotifier {
 
   LoginProvider({required this.apiService});
 
-  LoginResultState _loginResultState = LoginResultNone();
+  LoginResultState _loginResultState = const LoginResultState.none();
 
   LoginResultState get loginResultState => _loginResultState;
 
@@ -38,27 +38,30 @@ class LoginProvider extends ChangeNotifier {
   }
 
   Future<void> login({required String email, required String password}) async {
-    _loginResultState = LoginResultNone();
+    _loginResultState = LoginResultState.none();
     notifyListeners();
     try {
-      _loginResultState = LoginResultLoading();
+      _loginResultState = LoginResultState.loading();
       _message = "";
       _error = false;
       notifyListeners();
       final result = await apiService.login(email: email, password: password);
       if (!result.error) {
-        _loginResultState = LoginResultSuccess(result.message, result.user);
-        _user = result.user;
+        _loginResultState = LoginResultState.loaded(
+          message: result.message,
+          user: result.loginResult,
+        );
+        _user = result.loginResult;
         _error = false;
         _message = "Login Successful";
       } else {
-        _loginResultState = LoginResultFailed(result.message);
+        _loginResultState = LoginResultState.error(result.message);
         _error = true;
         _message = result.message;
       }
       notifyListeners();
     } catch (e) {
-      _loginResultState = LoginResultFailed("Failed to login");
+      _loginResultState = LoginResultState.error("Failed to login");
       _error = true;
       _message = e.toString();
       notifyListeners();

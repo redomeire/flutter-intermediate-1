@@ -1,15 +1,10 @@
-sealed class AddStoryResultState {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AddStoryResultNone extends AddStoryResultState {}
-
-class AddStoryResultLoading extends AddStoryResultState {}
-
-class AddStoryResultSuccess extends AddStoryResultState {
-  String message;
-  AddStoryResultSuccess({required this.message});
-}
-
-class AddStoryResultFailed extends AddStoryResultState {
-  String message;
-  AddStoryResultFailed({required this.message});
+part 'add_story_result_state.freezed.dart';
+@freezed
+sealed class AddStoryResultState with _$AddStoryResultState {
+  const factory AddStoryResultState.none() = AddStoryResultStateNone;
+  const factory AddStoryResultState.loading() = AddStoryResultStateLoading;
+  const factory AddStoryResultState.loaded(String message) = AddStoryResultStateLoaded;
+  const factory AddStoryResultState.error(String message) = AddStoryResultStateError;
 }

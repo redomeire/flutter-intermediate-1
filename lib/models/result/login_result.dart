@@ -1,21 +1,13 @@
 import 'package:belajar_aplikasi_flutter_intermediate/models/user.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class LoginResult {
-  bool error;
-  String message;
-  User user;
+part 'login_result.freezed.dart';
+part 'login_result.g.dart';
 
-  LoginResult({required this.error, required this.message, required this.user});
+@freezed
+abstract class LoginResult with _$LoginResult {
+  const factory LoginResult(
+      {required bool error, required String message, required User loginResult}) = _LoginResult;
 
-  factory LoginResult.fromJson(Map<String, dynamic> json) => LoginResult(
-    error: json["error"],
-    message: json["message"],
-    user: User.fromJson(json["loginResult"]),
-  );
-
-  Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-    "loginResult": user.toJson(),
-  };
+  factory LoginResult.fromJson(Map<String, dynamic> json) => _$LoginResultFromJson(json);
 }

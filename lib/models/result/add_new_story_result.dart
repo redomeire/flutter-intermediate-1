@@ -1,18 +1,14 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class AddNewStoryResult {
-  bool error;
-  String message;
+part 'add_new_story_result.freezed.dart';
+part 'add_new_story_result.g.dart';
 
-  AddNewStoryResult({required this.error, required this.message});
+@freezed
+abstract class AddNewStoryResult with _$AddNewStoryResult {
+  const factory AddNewStoryResult({
+    required bool error,
+    required String message,
+  }) = _AddNewStoryResult;
 
-  factory AddNewStoryResult.fromMap(Map<String, dynamic> map) {
-    return AddNewStoryResult(
-      error: map['error'] ?? false,
-      message: map['message'] ?? '',
-    );
-  }
-
-  factory AddNewStoryResult.fromJson(String source) =>
-      AddNewStoryResult.fromMap(json.decode(source));
+  factory AddNewStoryResult.fromJson(Map<String, dynamic> source) => _$AddNewStoryResultFromJson(source);
 }

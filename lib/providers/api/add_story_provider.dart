@@ -9,7 +9,7 @@ class AddStoryProvider extends ChangeNotifier {
 
   AddStoryProvider({required this.apiService});
 
-  AddStoryResultState _responseState = AddStoryResultNone();
+  AddStoryResultState _responseState = const AddStoryResultState.none();
 
   AddStoryResultState get responseState => _responseState;
 
@@ -47,12 +47,12 @@ class AddStoryProvider extends ChangeNotifier {
     double? lat,
     double? lon,
   }) async {
-    _responseState = AddStoryResultNone();
+    _responseState = const AddStoryResultState.none();
     _error = false;
     _message = "";
     notifyListeners();
     try {
-      _responseState = AddStoryResultLoading();
+      _responseState = const AddStoryResultState.loading();
       notifyListeners();
       final result = await apiService.addNewStory(
         description: description,
@@ -63,21 +63,21 @@ class AddStoryProvider extends ChangeNotifier {
         lon: lon,
       );
       if (result.error == false) {
-        _responseState = AddStoryResultSuccess(message: message);
+        _responseState = AddStoryResultState.loaded(result.message);
         _error = false;
         _message = result.message;
 
         imageFile = null;
         imagePath = null;
       } else {
-        _responseState = AddStoryResultFailed(message: result.message);
+        _responseState = AddStoryResultState.error(result.message);
         _error = true;
         _message = result.message;
       }
       notifyListeners();
     } catch (e) {
       final message = "Cannot add new story";
-      _responseState = AddStoryResultFailed(message: message);
+      _responseState = AddStoryResultState.error(message);
       _error = true;
       _message = message;
       notifyListeners();

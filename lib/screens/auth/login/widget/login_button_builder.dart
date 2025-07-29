@@ -8,7 +8,7 @@ class LoginConsumerBuilder {
 
   Widget loginButtonBuilder(context, state, widget) {
     return switch (state.loginResultState) {
-      LoginResultLoading() => ElevatedButton(
+      LoginResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -38,7 +38,7 @@ class LoginConsumerBuilder {
           ],
         ),
       ),
-      LoginResultSuccess() => ElevatedButton(
+      LoginResultStateLoaded() => ElevatedButton(
         onPressed: handleLogin,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -52,7 +52,7 @@ class LoginConsumerBuilder {
           ),
         ),
       ),
-      LoginResultFailed() => Column(
+      LoginResultStateError() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ElevatedButton(

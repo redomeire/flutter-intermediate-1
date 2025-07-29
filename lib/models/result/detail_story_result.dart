@@ -1,26 +1,16 @@
-import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class DetailStoryResult {
-  bool error;
-  String message;
-  Story story;
+import '../story.dart';
 
-  DetailStoryResult({
-    required this.error,
-    required this.message,
-    required this.story,
-  });
+part 'detail_story_result.freezed.dart';
+part 'detail_story_result.g.dart';
+@freezed
+abstract class DetailStoryResult with _$DetailStoryResult {
+  const factory DetailStoryResult({
+    required bool error,
+    required String message,
+    required Story story,
+  }) = _DetailStoryResult;
 
-  factory DetailStoryResult.fromJson(Map<String, dynamic> json) =>
-      DetailStoryResult(
-        error: json["error"],
-        message: json["message"],
-        story: Story.fromJson(json["story"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-    "story": story.toJson(),
-  };
+  factory DetailStoryResult.fromJson(Map<String, dynamic> json) => _$DetailStoryResultFromJson(json);
 }

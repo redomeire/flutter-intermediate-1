@@ -45,56 +45,61 @@ class _DetailScreenState extends State<DetailScreen> {
         child: Consumer<GetStoryDetailProvider>(
           builder: (context, state, child) {
             return switch (state.responseState) {
-              GetStoryDetailResultNone() => const SizedBox(),
-              GetStoryDetailResultLoading() => Center(
+              GetStoryDetailResultStateNone() => const SizedBox(),
+              GetStoryDetailResultStateLoading() => Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              GetStoryDetailResultSuccess(story: var story) => AppBottomSheet(
-                story: story,
-                child: Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        spacing: 10,
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: avatarColor,
-                            foregroundColor: Colors.white,
-                            child: Text(story.name[0]),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                story.name,
-                                style: AppTextStyles.titleMedium.copyWith(
-                                  fontWeight: FontWeight.bold,
+              GetStoryDetailResultStateLoaded(message: _, story: var story) =>
+                AppBottomSheet(
+                  story: story,
+                  child: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          spacing: 10,
+                          children: [
+                            CircleAvatar(
+                              backgroundColor: avatarColor,
+                              foregroundColor: Colors.white,
+                              child: Text(story.name[0]),
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  story.name,
+                                  style: AppTextStyles.titleMedium.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                              ),
-                              Text(
-                                dateFormatter(story.createdAt),
-                                style: AppTextStyles.bodyLargeRegular,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20),
-                      FadeInImage.assetNetwork(
-                        placeholder: "images/elementor-placeholder-image.webp",
-                        image: story.photoUrl,
-                      ),
-                      SizedBox(height: 20),
-                      Text(story.description, style: AppTextStyles.labelLarge),
-                    ],
+                                Text(
+                                  dateFormatter(story.createdAt),
+                                  style: AppTextStyles.bodyLargeRegular,
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        SizedBox(height: 20),
+                        FadeInImage.assetNetwork(
+                          placeholder:
+                              "images/elementor-placeholder-image.webp",
+                          image: story.photoUrl,
+                        ),
+                        SizedBox(height: 20),
+                        Text(
+                          story.description,
+                          style: AppTextStyles.labelLarge,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              GetStoryDetailResultError(message: var message) => Center(
+              GetStoryDetailResultStateError(message: var message) => Center(
                 child: Text(message),
               ),
             };

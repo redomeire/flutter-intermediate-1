@@ -1,18 +1,11 @@
 import 'package:belajar_aplikasi_flutter_intermediate/models/story.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-sealed class GetStoryDetailResultState {}
-
-class GetStoryDetailResultNone extends GetStoryDetailResultState {}
-
-class GetStoryDetailResultLoading extends GetStoryDetailResultState {}
-
-class GetStoryDetailResultSuccess extends GetStoryDetailResultState {
-  String message;
-  Story story;
-  GetStoryDetailResultSuccess({required this.message, required this.story});
-}
-
-class GetStoryDetailResultError extends GetStoryDetailResultState {
-  String message;
-  GetStoryDetailResultError({required this.message});
+part 'get_story_detail_result_state.freezed.dart';
+@freezed
+sealed class GetStoryDetailResultState with _$GetStoryDetailResultState {
+  const factory GetStoryDetailResultState.none() = GetStoryDetailResultStateNone;
+  const factory GetStoryDetailResultState.loading() = GetStoryDetailResultStateLoading;
+  const factory GetStoryDetailResultState.loaded({required String message, required Story story}) = GetStoryDetailResultStateLoaded;
+  const factory GetStoryDetailResultState.error(String message) = GetStoryDetailResultStateError;
 }

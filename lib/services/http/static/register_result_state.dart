@@ -1,17 +1,11 @@
-sealed class RegisterResultState {}
 
-class RegisterResultNone extends RegisterResultState {}
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class RegisterResultLoading extends RegisterResultState {}
-
-class RegisterResultSuccess extends RegisterResultState {
-  final String message;
-
-  RegisterResultSuccess(this.message);
-}
-
-class RegisterResultFailed extends RegisterResultState {
-  final String message;
-
-  RegisterResultFailed(this.message);
+part 'register_result_state.freezed.dart';
+@freezed
+sealed class RegisterResultState with _$RegisterResultState {
+  const factory RegisterResultState.none() = RegisterResultStateNone;
+  const factory RegisterResultState.loading() = RegisterResultStateLoading;
+  const factory RegisterResultState.loaded(String message) = RegisterResultStateLoaded;
+  const factory RegisterResultState.error(String message) = RegisterResultStateError;
 }

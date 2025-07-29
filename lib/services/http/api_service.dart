@@ -78,12 +78,11 @@ class ApiService {
       bytes,
       filename: filename,
     );
-    final Map<String, String> fields = {
-      "description": description,
-      "lat": lat.toString(),
-      "lon": lon.toString(),
-    };
+    final Map<String, String> fields = {"description": description};
 
+    if (lat != null && lon != null) {
+      fields.addAll({"lat": lat.toString(), "lon": lon.toString()});
+    }
     request.files.add(multipartFile);
     request.fields.addAll(fields);
     request.headers.addAll(requestHeader);
@@ -96,7 +95,7 @@ class ApiService {
 
     if (statusCode == 201) {
       final AddNewStoryResult uploadResponse = AddNewStoryResult.fromJson(
-        responseData,
+        jsonDecode(responseData),
       );
       return uploadResponse;
     } else {

@@ -8,7 +8,7 @@ class GetStoriesProvider extends ChangeNotifier {
 
   GetStoriesProvider({required this.apiService});
 
-  GetStoriesResultState _responseState = GetStoriesResultNone();
+  GetStoriesResultState _responseState = const GetStoriesResultState.none();
 
   GetStoriesResultState get responseState => _responseState;
 
@@ -36,6 +36,7 @@ class GetStoriesProvider extends ChangeNotifier {
   Future<void> getStories({int? location, required String token}) async {
     if (_isLoading || pageItems == null) return; // prevent duplicate calls
 
+    _responseState = const GetStoriesResultState.none();
     _isLoading = true;
     notifyListeners();
 
@@ -43,7 +44,7 @@ class GetStoriesProvider extends ChangeNotifier {
     _message = "";
     try {
       if (_listStory.isEmpty) {
-        _responseState = GetStoriesResultLoading();
+        _responseState = const GetStoriesResultState.loading();
       }
       notifyListeners();
       final result = await apiService.getAllStories(
@@ -53,10 +54,7 @@ class GetStoriesProvider extends ChangeNotifier {
         token: token,
       );
       if (result.error == false) {
-        _responseState = GetStoriesResultSuccess(
-          message: message,
-          listStory: result.listStory,
-        );
+        _responseState = GetStoriesResultState.loaded(message, listStory);
         _listStory.addAll(result.listStory);
         _error = false;
         _message = result.message;
@@ -67,14 +65,14 @@ class GetStoriesProvider extends ChangeNotifier {
           pageItems = pageItems! + 1;
         }
       } else {
-        _responseState = GetStoriesResultError(message: result.message);
+        _responseState = GetStoriesResultState.error(message);
         _error = true;
         _message = result.message;
       }
       notifyListeners();
     } catch (e) {
       final message = "Cannot get stories";
-      _responseState = GetStoriesResultError(message: message);
+      _responseState = GetStoriesResultState.error(message);
       _error = true;
       _message = message;
       notifyListeners();

@@ -8,7 +8,7 @@ class GetStoryDetailProvider extends ChangeNotifier {
 
   GetStoryDetailProvider({required this.apiService});
 
-  GetStoryDetailResultState _responseState = GetStoryDetailResultNone();
+  GetStoryDetailResultState _responseState = const GetStoryDetailResultState.none();
 
   GetStoryDetailResultState get responseState => _responseState;
 
@@ -25,34 +25,31 @@ class GetStoryDetailProvider extends ChangeNotifier {
   Story? get story => _story;
 
   Future<void> getStoryDetail(String id, String token) async {
-    _responseState = GetStoryDetailResultNone();
+    _responseState = GetStoryDetailResultStateNone();
     _message = "";
     _error = false;
     notifyListeners();
     try {
-      _responseState = GetStoryDetailResultLoading();
+      _responseState = GetStoryDetailResultState.loading();
       notifyListeners();
       final result = await apiService.getStoryDetail(id, token);
       if (result.error == false) {
-        _responseState = GetStoryDetailResultSuccess(
+        _responseState = GetStoryDetailResultState.loaded(
           message: message,
           story: result.story,
         );
         _error = false;
         _message = result.message;
         _story = result.story;
-        print(
-          "Latitude : ${result.story.lat}, Longitude : ${result.story.lon}",
-        );
       } else {
-        _responseState = GetStoryDetailResultError(message: result.message);
+        _responseState = GetStoryDetailResultState.error(message);
         _error = true;
         _message = result.message;
       }
       notifyListeners();
     } catch (e) {
       final message = "Cannot get story detail";
-      _responseState = GetStoryDetailResultError(message: message);
+      _responseState = GetStoryDetailResultState.error(message);
       _error = true;
       _message = message;
       notifyListeners();

@@ -10,7 +10,7 @@ class AddStoryConsumerBuilder {
 
   Widget addStoryButtonBuilder(context, state, widget) {
     return switch (state.responseState) {
-      AddStoryResultLoading() => ElevatedButton(
+      AddStoryResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -40,7 +40,7 @@ class AddStoryConsumerBuilder {
           ],
         ),
       ),
-      AddStoryResultSuccess() => ElevatedButton(
+      AddStoryResultStateLoaded() => ElevatedButton(
         onPressed: handleUpload,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -54,7 +54,7 @@ class AddStoryConsumerBuilder {
           ),
         ),
       ),
-      AddStoryResultFailed() => Column(
+      AddStoryResultStateError() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ElevatedButton(

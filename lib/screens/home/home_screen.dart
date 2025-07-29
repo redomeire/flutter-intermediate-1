@@ -38,13 +38,13 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Consumer<GetStoriesProvider>(
           builder: (context, state, child) {
             return switch (state.responseState) {
-              GetStoriesResultLoading() => Center(
+              GetStoriesResultStateLoading() => Center(
                 child: CircularProgressIndicator(
                   color: Theme.of(context).colorScheme.primary,
                 ),
               ),
-              GetStoriesResultSuccess() => StoryList(),
-              GetStoriesResultError() => Center(
+              GetStoriesResultStateLoaded() => StoryList(),
+              GetStoriesResultStateError() => Center(
                 child: Text("Sorry, error happened"),
               ),
               _ => const SizedBox(),

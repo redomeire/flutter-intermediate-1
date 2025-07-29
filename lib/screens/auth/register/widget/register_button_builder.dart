@@ -8,7 +8,7 @@ class RegisterConsumerBuilder {
 
   Widget registerButtonBuilder(context, state, widget) {
     return switch (state.registerResultState) {
-      RegisterResultLoading() => ElevatedButton(
+      RegisterResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -38,7 +38,7 @@ class RegisterConsumerBuilder {
           ],
         ),
       ),
-      RegisterResultSuccess() => ElevatedButton(
+      RegisterResultStateLoaded() => ElevatedButton(
         onPressed: handleRegister,
         style: ElevatedButton.styleFrom(
           backgroundColor: Colors.black87,
@@ -52,7 +52,7 @@ class RegisterConsumerBuilder {
           ),
         ),
       ),
-      RegisterResultFailed() => Column(
+      RegisterResultStateError() => Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           ElevatedButton(

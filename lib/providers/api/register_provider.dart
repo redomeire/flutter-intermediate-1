@@ -7,7 +7,7 @@ class RegisterProvider extends ChangeNotifier {
 
   RegisterProvider({required this.apiService});
 
-  RegisterResultState _registerResultState = RegisterResultNone();
+  RegisterResultState _registerResultState = RegisterResultState.none();
 
   RegisterResultState get registerResultState => _registerResultState;
 
@@ -49,7 +49,7 @@ class RegisterProvider extends ChangeNotifier {
     required String password,
   }) async {
     try {
-      _registerResultState = RegisterResultLoading();
+      _registerResultState = const RegisterResultState.loading();
       _message = "";
       _error = false;
       notifyListeners();
@@ -59,17 +59,17 @@ class RegisterProvider extends ChangeNotifier {
         password: password,
       );
       if (!result.error) {
-        _registerResultState = RegisterResultSuccess(result.message);
+        _registerResultState = RegisterResultState.loaded(result.message);
         _message = "Register Successful";
         _error = false;
       } else {
-        _registerResultState = RegisterResultFailed(result.message);
+        _registerResultState = RegisterResultState.error(result.message);
         _message = "Register Failed";
         _error = true;
       }
       notifyListeners();
     } catch (e) {
-      _registerResultState = RegisterResultFailed("Failed to register");
+      _registerResultState = RegisterResultState.error("Failed to register");
       _error = true;
       _message = "Register Failed";
       notifyListeners();
