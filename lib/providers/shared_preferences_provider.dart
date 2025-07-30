@@ -16,6 +16,10 @@ class SharedPreferencesProvider extends ChangeNotifier {
 
   String get message => _message;
 
+  String _theme = 'light';
+
+  String get theme => _theme;
+
   Future<void> setUserData(User user) async {
     try {
       await sharedPreferencesService.setUser(user);
@@ -47,6 +51,30 @@ class SharedPreferencesProvider extends ChangeNotifier {
       _message = "success delete user data";
     } catch (e) {
       _message = "error delete user data";
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> setTheme(String theme) async {
+    try {
+      await sharedPreferencesService.setTheme(theme);
+      _theme = theme;
+      _message = "success save theme data";
+    } catch (e) {
+      _message = "failed to save theme data";
+    } finally {
+      notifyListeners();
+    }
+  }
+
+  Future<void> getTheme() async {
+    try {
+      final theme = await sharedPreferencesService.getTheme();
+      _theme = theme ?? "";
+      _message = "success get theme";
+    } catch (e) {
+      _message = "error getting theme";
     } finally {
       notifyListeners();
     }

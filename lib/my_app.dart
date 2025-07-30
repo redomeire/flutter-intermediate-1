@@ -1,6 +1,4 @@
-import 'package:belajar_aplikasi_flutter_intermediate/config/flavor/flavor_config.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/app_router.dart';
-import 'package:belajar_aplikasi_flutter_intermediate/config/theme/app_theme.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_story_detail_provider.dart';
@@ -59,13 +57,7 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(create: (context) => GetLatLngFromMapProvider()),
       ],
-      child: MaterialApp.router(
-        title: FlavorConfig.instance.flavorValues.titleApp,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.dark,
-        routerConfig: getRouterConfig(sharedPreferences),
-      ),
+      child: AppRouter(sharedPreferences: sharedPreferences),
     );
   }
 }

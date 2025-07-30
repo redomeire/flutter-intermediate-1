@@ -86,6 +86,32 @@ class _AppBottomNavigationBarState extends State<AppBottomNavigationBar> {
                 ),
               ),
             ),
+            ClipOval(
+              child: Material(
+                color: Colors.transparent,
+                child: InkWell(
+                  onTap: () {
+                    context.go("/settings");
+                  },
+                  child: SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.settings_outlined,
+                          size: 24,
+                          color: widget.path == '/settings'
+                              ? Theme.of(context).colorScheme.primary
+                              : Theme.of(context).colorScheme.secondary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
             _sharedPreferencesProvider.user != null
                 ? ClipOval(
                     child: Material(

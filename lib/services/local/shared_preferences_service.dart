@@ -21,4 +21,13 @@ class SharedPreferencesService {
   Future<void> deleteUser() async {
     await sharedPreferences.remove("App.User");
   }
+
+  Future<void> setTheme(String theme) async {
+    await sharedPreferences.setString("App.Theme", theme);
+  }
+
+  Future<String?> getTheme() async {
+    final theme = sharedPreferences.getString("App.Theme");
+    return theme;
+  }
 }

@@ -9,7 +9,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('id_ID');
   final sharedPreferences = await SharedPreferences.getInstance();
-  runApp(MyApp(sharedPreferences: sharedPreferences));
 
   FlavorConfig(
     flavorType: FlavorType.premium,
