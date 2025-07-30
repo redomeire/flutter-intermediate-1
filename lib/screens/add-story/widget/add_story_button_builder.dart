@@ -13,10 +13,10 @@ class AddStoryConsumerBuilder {
       AddStoryResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
-          disabledBackgroundColor: Theme.of(context).colorScheme.inverseSurface,
+          disabledBackgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,7 +34,7 @@ class AddStoryConsumerBuilder {
             Text(
               'Submit',
               style: AppTextStyles.bodyLargeMedium.copyWith(
-                color: Theme.of(context).colorScheme.surface,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ],
@@ -43,14 +43,14 @@ class AddStoryConsumerBuilder {
       AddStoryResultStateLoaded() => ElevatedButton(
         onPressed: handleUpload,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),
         child: Text(
           'Submit',
           style: AppTextStyles.bodyLargeMedium.copyWith(
-            color: Theme.of(context).colorScheme.surface,
+            color: Theme.of(context).colorScheme.secondary,
           ),
         ),
       ),
@@ -60,7 +60,7 @@ class AddStoryConsumerBuilder {
           ElevatedButton(
             onPressed: handleUpload,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black87,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -69,7 +69,7 @@ class AddStoryConsumerBuilder {
             child: Text(
               'Submit',
               style: AppTextStyles.bodyLargeMedium.copyWith(
-                color: Theme.of(context).colorScheme.surface,
+                color: Theme.of(context).colorScheme.secondary,
               ),
             ),
           ),
@@ -85,7 +85,7 @@ class AddStoryConsumerBuilder {
       _ => ElevatedButton(
         onPressed: handleUpload,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),

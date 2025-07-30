@@ -25,7 +25,7 @@ class AuthBottomAppBar extends StatelessWidget {
                   Text(
                     "${isLoginPage ? "Don't" : "Already"}  have an account? ",
                     style: AppTextStyles.labelMedium.copyWith(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                     ),
                   ),
                   GestureDetector(

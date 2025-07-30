@@ -1,3 +1,4 @@
+import 'package:belajar_aplikasi_flutter_intermediate/config/flavor/flavor_config.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/config/router/app_router.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/config/theme/app_theme.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
@@ -10,16 +11,8 @@ import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferenc
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/local/shared_preferences_service.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await initializeDateFormatting('id_ID');
-  final sharedPreferences = await SharedPreferences.getInstance();
-  runApp(MyApp(sharedPreferences: sharedPreferences));
-}
 
 class MyApp extends StatelessWidget {
   final SharedPreferences sharedPreferences;
@@ -67,10 +60,10 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (context) => GetLatLngFromMapProvider()),
       ],
       child: MaterialApp.router(
-        title: "Story App",
+        title: FlavorConfig.instance.flavorValues.titleApp,
         theme: AppTheme.lightTheme,
         darkTheme: AppTheme.darkTheme,
-        themeMode: ThemeMode.light,
+        themeMode: ThemeMode.dark,
         routerConfig: getRouterConfig(sharedPreferences),
       ),
     );

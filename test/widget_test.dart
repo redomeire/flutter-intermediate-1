@@ -8,7 +8,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:belajar_aplikasi_flutter_intermediate/main.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/my_app.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {

@@ -11,10 +11,10 @@ class LoginConsumerBuilder {
       LoginResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
-          disabledBackgroundColor: Theme.of(context).colorScheme.inverseSurface,
+          disabledBackgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,7 +41,7 @@ class LoginConsumerBuilder {
       LoginResultStateLoaded() => ElevatedButton(
         onPressed: handleLogin,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),
@@ -58,7 +58,7 @@ class LoginConsumerBuilder {
           ElevatedButton(
             onPressed: handleLogin,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black87,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -83,7 +83,7 @@ class LoginConsumerBuilder {
       _ => ElevatedButton(
         onPressed: handleLogin,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),

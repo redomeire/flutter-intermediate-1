@@ -11,10 +11,10 @@ class RegisterConsumerBuilder {
       RegisterResultStateLoading() => ElevatedButton(
         onPressed: null,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
-          disabledBackgroundColor: Theme.of(context).colorScheme.inverseSurface,
+          disabledBackgroundColor: Theme.of(context).colorScheme.secondary,
         ),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -41,7 +41,7 @@ class RegisterConsumerBuilder {
       RegisterResultStateLoaded() => ElevatedButton(
         onPressed: handleRegister,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),
@@ -58,7 +58,7 @@ class RegisterConsumerBuilder {
           ElevatedButton(
             onPressed: handleRegister,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.black87,
+              backgroundColor: Theme.of(context).colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -83,7 +83,7 @@ class RegisterConsumerBuilder {
       _ => ElevatedButton(
         onPressed: handleRegister,
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.black87,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
           padding: const EdgeInsets.symmetric(vertical: 20),
         ),

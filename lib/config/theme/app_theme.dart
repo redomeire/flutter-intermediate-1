@@ -1,3 +1,4 @@
+import 'package:belajar_aplikasi_flutter_intermediate/config/flavor/flavor_config.dart';
 import 'package:flutter/material.dart';
 
 import '../../styles/color/app_color.dart';
@@ -30,7 +31,9 @@ class AppTheme {
 
   static ThemeData get lightTheme {
     return ThemeData(
-      colorSchemeSeed: AppColor.white.color,
+      colorSchemeSeed: FlavorConfig.instance.flavorType == FlavorType.regular
+          ? AppColor.white.color
+          : AppColor.green.color,
       brightness: Brightness.light,
       textTheme: _textTheme,
       useMaterial3: true,
@@ -40,7 +43,9 @@ class AppTheme {
 
   static ThemeData get darkTheme {
     return ThemeData(
-      colorSchemeSeed: AppColor.black.color,
+      colorSchemeSeed: FlavorConfig.instance.flavorType == FlavorType.regular
+          ? AppColor.black.color
+          : AppColor.green.color,
       brightness: Brightness.dark,
       textTheme: _textTheme,
       useMaterial3: true,

@@ -44,7 +44,7 @@ class OnboardingScreen extends StatelessWidget {
                         context.go("/onboarding/login");
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black87,
+                        backgroundColor: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
