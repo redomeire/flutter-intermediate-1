@@ -2,6 +2,7 @@ import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/home/widgets/story_list.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/get_stories_result_state.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/styles/typography/app_typography.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,14 +14,14 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late GetStoriesProvider _getStoriesProvider;
   late SharedPreferencesProvider _sharedPreferencesProvider;
+  late GetStoriesProvider _getStoriesProvider;
 
   @override
   void initState() {
     super.initState();
-    _getStoriesProvider = context.read<GetStoriesProvider>();
     _sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
+    _getStoriesProvider = context.read<GetStoriesProvider>();
 
     Future.microtask(() async {
       await _sharedPreferencesProvider.getUserData();
@@ -38,14 +39,26 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Consumer<GetStoriesProvider>(
           builder: (context, state, child) {
             return switch (state.responseState) {
-              GetStoriesResultStateLoading() => Center(
-                child: CircularProgressIndicator(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              GetStoriesResultStateLoaded() => StoryList(),
+              GetStoriesResultStateLoading() =>
+                state.pageItems == 1
+                    ? Center(
+                        child: CircularProgressIndicator(
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      )
+                    : SizedBox(),
+              GetStoriesResultStateLoaded(
+                message: var _,
+                listStory: var listStory,
+              ) =>
+                StoryList(listStory: listStory, pageItems: state.pageItems),
               GetStoriesResultStateError() => Center(
-                child: Text("Sorry, error happened"),
+                child: Text(
+                  "Sorry, error happened",
+                  style: AppTextStyles.labelSmall.copyWith(
+                    color: Theme.of(context).colorScheme.inverseSurface,
+                  ),
+                ),
               ),
               _ => const SizedBox(),
             };

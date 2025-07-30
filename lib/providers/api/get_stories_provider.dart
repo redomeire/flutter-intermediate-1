@@ -24,46 +24,41 @@ class GetStoriesProvider extends ChangeNotifier {
 
   List<Story> get listStory => _listStory;
 
-  bool _isLoading = false;
-
-  bool get isLoading => _isLoading;
-
   // pagination
 
   int? pageItems = 1;
   int sizeItems = 10;
 
   Future<void> getStories({int? location, required String token}) async {
-    if (_isLoading || pageItems == null) return; // prevent duplicate calls
-
-    _responseState = const GetStoriesResultState.none();
-    _isLoading = true;
-    notifyListeners();
-
     _error = false;
     _message = "";
     try {
-      if (_listStory.isEmpty) {
+      if (pageItems == 1) {
         _responseState = const GetStoriesResultState.loading();
+        notifyListeners();
       }
-      notifyListeners();
       final result = await apiService.getAllStories(
         page: pageItems,
         size: sizeItems,
         location: location,
         token: token,
       );
+
+      _listStory.addAll(result.listStory);
+
+      if (result.listStory.length < sizeItems) {
+        pageItems = null;
+      } else {
+        pageItems = pageItems! + 1;
+      }
+
       if (result.error == false) {
-        _responseState = GetStoriesResultState.loaded(message, listStory);
-        _listStory.addAll(result.listStory);
+        _responseState = GetStoriesResultState.loaded(
+          message: result.message,
+          listStory: _listStory,
+        );
         _error = false;
         _message = result.message;
-
-        if (result.listStory.length < sizeItems) {
-          pageItems = null;
-        } else {
-          pageItems = pageItems! + 1;
-        }
       } else {
         _responseState = GetStoriesResultState.error(message);
         _error = true;
@@ -75,10 +70,16 @@ class GetStoriesProvider extends ChangeNotifier {
       _responseState = GetStoriesResultState.error(message);
       _error = true;
       _message = message;
-      notifyListeners();
     } finally {
-      _isLoading = false;
       notifyListeners();
     }
+  }
+
+  Future<void> refresh({required String token}) async {
+    _listStory.clear();
+    pageItems = 1;
+    notifyListeners();
+    
+    await getStories(token: token);
   }
 }

@@ -251,7 +251,7 @@ String toString() {
 
 
 class GetStoriesResultStateLoaded implements GetStoriesResultState {
-  const GetStoriesResultStateLoaded(this.message, final  List<Story> listStory): _listStory = listStory;
+  const GetStoriesResultStateLoaded({required this.message, required final  List<Story> listStory}): _listStory = listStory;
   
 
  final  String message;
@@ -312,8 +312,8 @@ class _$GetStoriesResultStateLoadedCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,Object? listStory = null,}) {
   return _then(GetStoriesResultStateLoaded(
-null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,null == listStory ? _self._listStory : listStory // ignore: cast_nullable_to_non_nullable
+message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
+as String,listStory: null == listStory ? _self._listStory : listStory // ignore: cast_nullable_to_non_nullable
 as List<Story>,
   ));
 }

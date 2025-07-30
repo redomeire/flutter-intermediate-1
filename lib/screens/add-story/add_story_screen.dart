@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:belajar_aplikasi_flutter_intermediate/providers/api/add_story_provider.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/providers/api/get_stories_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/get_latlng_from_map_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/providers/shared_preferences_provider.dart';
 import 'package:belajar_aplikasi_flutter_intermediate/screens/add-story/widget/add_story_form.dart';
@@ -25,6 +26,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
   late AddStoryProvider _addStoryProvider;
   late SharedPreferencesProvider _sharedPreferencesProvider;
   late GetLatLngFromMapProvider _getLatLngFromMapProvider;
+  late GetStoriesProvider _getStoriesProvider;
 
   @override
   void initState() {
@@ -32,6 +34,7 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
     _addStoryProvider = context.read<AddStoryProvider>();
     _sharedPreferencesProvider = context.read<SharedPreferencesProvider>();
     _getLatLngFromMapProvider = context.read<GetLatLngFromMapProvider>();
+    _getStoriesProvider = context.read<GetStoriesProvider>();
   }
 
   @override
@@ -126,12 +129,18 @@ class _AddStoryScreenState extends State<AddStoryScreen> {
       lon: _getLatLngFromMapProvider.lon,
     );
 
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(_addStoryProvider.message)));
+
     if (!_addStoryProvider.error) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(SnackBar(content: Text(_addStoryProvider.message)));
-      Future.delayed(Duration(seconds: 1), () {
-        context.go("/");
+      Future.microtask(() async {
+        await _getStoriesProvider.refresh(
+          token: _sharedPreferencesProvider.user?.token ?? "",
+        );
+        Future.delayed(Duration(seconds: 1), () {
+          context.go("/");
+        });
       });
     }
   }

@@ -6,6 +6,6 @@ part 'get_stories_result_state.freezed.dart';
 sealed class GetStoriesResultState with _$GetStoriesResultState {
   const factory GetStoriesResultState.none() = GetStoriesResultStateNone;
   const factory GetStoriesResultState.loading() = GetStoriesResultStateLoading;
-  const factory GetStoriesResultState.loaded(String message, List<Story> listStory) = GetStoriesResultStateLoaded;
+  const factory GetStoriesResultState.loaded({required String message, required List<Story> listStory}) = GetStoriesResultStateLoaded;
   const factory GetStoriesResultState.error(String message) = GetStoriesResultStateError;
 }
