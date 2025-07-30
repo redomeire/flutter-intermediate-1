@@ -13,7 +13,6 @@ void main() async {
 
   FlavorConfig(
     flavorType: FlavorType.regular,
-    color: Colors.orange,
     flavorValues: const FlavorValues(titleApp: "Regular App"),
   );
 

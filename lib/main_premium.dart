@@ -13,7 +13,6 @@ void main() async {
 
   FlavorConfig(
     flavorType: FlavorType.premium,
-    color: Colors.blue,
     flavorValues: const FlavorValues(titleApp: "Premium App"),
   );
 

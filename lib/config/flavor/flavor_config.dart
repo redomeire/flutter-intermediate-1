@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 enum FlavorType { regular, premium }
 
 class FlavorValues {
@@ -10,14 +8,12 @@ class FlavorValues {
 
 class FlavorConfig {
   final FlavorType flavorType;
-  final MaterialColor color;
   final FlavorValues flavorValues;
 
   static FlavorConfig? _instance;
 
   FlavorConfig({
     this.flavorType = FlavorType.regular,
-    this.color = Colors.orange,
     this.flavorValues = const FlavorValues(),
   }) {
     _instance = this;
