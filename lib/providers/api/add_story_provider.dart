@@ -1,0 +1,86 @@
+import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/add_story_result_state.dart';
+import 'package:flutter/material.dart';
+
+import 'package:image_picker/image_picker.dart';
+
+class AddStoryProvider extends ChangeNotifier {
+  final ApiService apiService;
+
+  AddStoryProvider({required this.apiService});
+
+  AddStoryResultState _responseState = const AddStoryResultState.none();
+
+  AddStoryResultState get responseState => _responseState;
+
+  String _message = "";
+
+  String get message => _message;
+
+  bool _error = false;
+
+  bool get error => _error;
+
+  String description = "";
+
+  bool isObscureText = true;
+
+  XFile? imageFile;
+
+  void setImageFile(XFile? file) {
+    imageFile = file;
+    notifyListeners();
+  }
+
+  String? imagePath;
+
+  void setImagePath(String? value) {
+    imagePath = value;
+    notifyListeners();
+  }
+
+  Future<void> addStory({
+    required String description,
+    required List<int> bytes,
+    required String fileName,
+    String? token,
+    double? lat,
+    double? lon,
+  }) async {
+    _responseState = const AddStoryResultState.none();
+    _error = false;
+    _message = "";
+    notifyListeners();
+    try {
+      _responseState = const AddStoryResultState.loading();
+      notifyListeners();
+      final result = await apiService.addNewStory(
+        description: description,
+        token: token,
+        bytes: bytes,
+        filename: fileName,
+        lat: lat,
+        lon: lon,
+      );
+      if (result.error == false) {
+        _responseState = AddStoryResultState.loaded(result.message);
+        _error = false;
+        _message = result.message;
+
+        imageFile = null;
+        imagePath = null;
+      } else {
+        _responseState = AddStoryResultState.error(result.message);
+        _error = true;
+        _message = result.message;
+      }
+      notifyListeners();
+    } catch (e) {
+      final message = "Cannot add new story";
+      _responseState = AddStoryResultState.error(message);
+      _error = true;
+      _message = message;
+      notifyListeners();
+    }
+  }
+}

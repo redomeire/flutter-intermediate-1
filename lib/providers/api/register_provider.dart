@@ -1,0 +1,78 @@
+import 'package:belajar_aplikasi_flutter_intermediate/services/http/api_service.dart';
+import 'package:belajar_aplikasi_flutter_intermediate/services/http/static/register_result_state.dart';
+import 'package:flutter/widgets.dart';
+
+class RegisterProvider extends ChangeNotifier {
+  final ApiService apiService;
+
+  RegisterProvider({required this.apiService});
+
+  RegisterResultState _registerResultState = RegisterResultState.none();
+
+  RegisterResultState get registerResultState => _registerResultState;
+
+  String _message = "";
+
+  String get message => _message;
+
+  bool _error = false;
+
+  bool get error => _error;
+
+  String name = "";
+
+  String email = "";
+
+  String password = "";
+
+  bool _isObscureTextPassword = false;
+
+  bool get isObscureTextPassword => _isObscureTextPassword;
+
+  void toggleIsObscurePassword() {
+    _isObscureTextPassword = !_isObscureTextPassword;
+    notifyListeners();
+  }
+
+  bool _isObscureTextConfirmPassword = false;
+
+  bool get isObscureTextConfirmPassword => _isObscureTextConfirmPassword;
+
+  void toggleIsObscureConfirmPassword() {
+    _isObscureTextConfirmPassword = !_isObscureTextConfirmPassword;
+    notifyListeners();
+  }
+
+  Future<void> register({
+    required String name,
+    required String email,
+    required String password,
+  }) async {
+    try {
+      _registerResultState = const RegisterResultState.loading();
+      _message = "";
+      _error = false;
+      notifyListeners();
+      final result = await apiService.register(
+        name: name,
+        email: email,
+        password: password,
+      );
+      if (!result.error) {
+        _registerResultState = RegisterResultState.loaded(result.message);
+        _message = "Register Successful";
+        _error = false;
+      } else {
+        _registerResultState = RegisterResultState.error(result.message);
+        _message = "Register Failed";
+        _error = true;
+      }
+      notifyListeners();
+    } catch (e) {
+      _registerResultState = RegisterResultState.error("Failed to register");
+      _error = true;
+      _message = "Register Failed";
+      notifyListeners();
+    }
+  }
+}
